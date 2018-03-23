@@ -43,7 +43,7 @@ Leaf::Leaf(uint16_t index, uint32_t code, uint8_t code_length){
 
 	HuffmanSymbolCode* Leaf::search(char* encoded){
 	//Serial.println("Leaf::search");
-		return value;//TODO check this!
+		return value;
 	};
 	HuffmanSymbolCode* Leaf::searchBit(uint8_t* word, uint32_t length, uint32_t bit){
 	//Serial.println("Leaf::searchBit");

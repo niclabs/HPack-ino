@@ -469,9 +469,6 @@ byte* HPackData::encode(){
 };
 
 
-
-
-
 HeaderBuffer::HeaderBuffer(uint32_t incomming_buffer_max_size,  uint32_t maxSize){
 	Serial.println(F("----HeaderBuffer"));
 	this->buf_size = incomming_buffer_max_size;
@@ -480,8 +477,6 @@ HeaderBuffer::HeaderBuffer(uint32_t incomming_buffer_max_size,  uint32_t maxSize
 	this->next = 0;
 	this->dyn_table = new HPackDynamicTable(maxSize);
 };
-
-
 
 static void HeaderBuffer::operator delete(void *ptr){
 	Serial.println(F("HeaderBuffer delete"));
@@ -502,8 +497,6 @@ uint32_t HeaderBuffer::availableBufSize(){
 	Serial.println(availableSize);
 	return availableSize;
 };
-
-
 
 uint32_t HeaderBuffer::addData(HPackData * data){
 	Serial.println(F("----addHPackData"));
@@ -635,8 +628,6 @@ char* HeaderBuffer::decodeString(uint32_t pointer, bool huffman, uint32_t size){
 		return s;
 	}
 };
-
-
 
 HPackData* HeaderBuffer::indexedHeaderField(uint32_t index){
 	//Serial.print(F("creating indexedHeaderField: "));
@@ -774,29 +765,6 @@ HPackData* HeaderBuffer::getNext(){
 	}	 
 };
 
-
-/*bool HPackData::send(){
-	byte* octets = this->encode();
-	
-	//TODO addtobuffer
-
-	if(preamble == (uint8_t)64){ //literalHeaderFieldWithIncrementalIndex
-		//DO stuff ?
-	}else if(preamble == (uint8_t)16){ //literalHeaderFieldWithoutIndexing
-		//DO stuff ?
-	}else if(preamble == (uint8_t)0){ //literalHeaderFieldNeverIndexed
-		//DO stuff ?
-	}else if(preamble == (uint8_t)32){ //dynamicTableSizeUpdate
-		//DOnew  stuff ?
-	}else if(preamble == (uint8_t)128){ //indexedHeaderField
-		//DO stuff ?
-	}
-
-
-};
-*/
-
-
 HeaderPair* HeaderBuffer::findEntry(uint32_t index){
 	if(index>61){
 		return dyn_table->findEntry(index);
@@ -838,20 +806,6 @@ HeaderPair* HeaderBuffer::getHeaderPair(HPackData* hpd){
 		}
 	}
 };
-/*
-HeaderPair* HeaderBuffer::decodeIndexedHeaderField(byte * data){
-	Serial.println("----decodeIndexedHeaderField");
-	uint32_t index = decodeInteger(data, 7);
-	Serial.println(index);
-	//Serial.println(index-(HPackDynamicTable::FIRST_INDEX+1));
-	//TODO Search index in table...
-	HeaderPair *hpf = findEntry(index);
-	Serial.println("entry found: ");
-	hpf->toString();
-
-	return hpf;
-};
-*/
 
 HPack::HPack(uint32_t max_header_buffer_size, uint32_t max_header_table_size){
 	this->header_buffer_size = max_header_buffer_size;
@@ -859,90 +813,10 @@ HPack::HPack(uint32_t max_header_buffer_size, uint32_t max_header_table_size){
 	this->dyn_table_size = max_header_table_size;
 	this->max_header_table_size = max_header_table_size;
 	hb = new HeaderBuffer(this->header_buffer_size, this->max_header_table_size);
-}
+};
 
 static void HPack::operator delete(void *ptr){
 	Serial.println(F("HPack delete"));
 	HeaderBuffer::operator delete(((HPack*)ptr)->hb);
     ::operator delete(ptr);
-}
-
-
-
-/*const char static_header_name_table[] PROGMEM = {":authority", ":method", ":method", ":path", ":path", ":scheme", ":scheme",
- ":status", ":status", ":status", ":status", ":status", ":status", ":status", 
- "accept-charset", "accept-encoding", "accept-language", "accept-ranges", "accept", 
- "access-control-allow-origin", "age", "allow", "authorization", "cache-control", 
- "content-disposition", "content-encoding", "content-language", "content-length", "content-location", 
- "content-range", "content-type", "cookie", "date", "etag", "expect", "expires", "from", "host", "if-match", "if-modified-since", 
- "if-none-match", "if-range", "if-unmodified-since", "last-modified", "link", "location", "max-forwards", 
- "proxy-authenticate", "proxy-authorization", "range", "referer", "refresh", "retry-after", "server", "set-cookie", 
- "strict-transport-security", "transfer-encoding", "user-agent", "vary", "via", "www-authenticate"};
-*/
-/*const char static_header_value_table[] PROGMEM = {"", "GET", "POST", "/", "/index.html", "http", "https",
- "200", "204", "206", "304", "400", "404", "500", "", "gzip, deflate", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
- */
-/* HeaderPair* static_table[] = {
-		new HeaderPair((char *)":authority",(char *)""),
-		new HeaderPair((char *)":method",(char *)"GET"),
-		new HeaderPair((char *)":method",(char *)"POST"),
-		new HeaderPair((char *)":path",(char *)"/"),
-		new HeaderPair((char *)":path",(char *)"/index.html"),
-		new HeaderPair((char *)":scheme",(char *)"http"),
-		new HeaderPair((char *)":scheme",(char *)"https"),
-		new HeaderPair((char *)":status",(char *)"200"),
-		new HeaderPair((char *)":status",(char *)"204"),
-		new HeaderPair((char *)":status",(char *)"206"),
-		new HeaderPair((char *)":status",(char *)"304"),
-		new HeaderPair((char *)":status",(char *)"400"),
-		new HeaderPair((char *)":status",(char *)"404"),
-		new HeaderPair((char *)":status",(char *)"500"),
-		new HeaderPair((char *)"accept-charset",(char *)""),
-		new HeaderPair((char *)"accept-encoding",(char *)"gzip, deflate"),
-		new HeaderPair((char *)"accept-language",(char *)""),
-		new HeaderPair((char *)"accept-ranges",(char *)""),
-		new HeaderPair((char *)"accept",(char *)""),
-		new HeaderPair((char *)"access-control-allow-origin",(char *)""),
-		new HeaderPair((char *)"age",(char *)""),
-		new HeaderPair((char *)"allow",(char *)""),
-		new HeaderPair((char *)"authorization",(char *)""),
-		new HeaderPair((char *)"cache-control",(char *)""),
-		new HeaderPair((char *)"content-disposition",(char *)""),
-		new HeaderPair((char *)"content-encoding",(char *)""),
-		new HeaderPair((char *)"content-language",(char *)""),
-		new HeaderPair((char *)"content-length",(char *)""),
-		new HeaderPair((char *)"content-location",(char *)""),
-		new HeaderPair((char *)"content-range",(char *)""),
-		new HeaderPair((char *)"content-type",(char *)""),
-		new HeaderPair((char *)"cookie",(char *)""),
-		new HeaderPair((char *)"date",(char *)""),
-		new HeaderPair((char *)"etag",(char *)""),
-		new HeaderPair((char *)"expect",(char *)""),
-		new HeaderPair((char *)"expires",(char *)""),
-		new HeaderPair((char *)"from",(char *)""),
-		new HeaderPair((char *)"host",(char *)""),
-		new HeaderPair((char *)"if-match",(char *)""),
-		new HeaderPair((char *)"if-modified-since",(char *)""),
-		new HeaderPair((char *)"if-none-match",(char *)""),
-		new HeaderPair((char *)"if-range",(char *)""),
-		new HeaderPair((char *)"if-unmodified-since",(char *)""),
-		new HeaderPair((char *)"last-modified",(char *)""),
-		new HeaderPair((char *)"link",(char *)""),
-		new HeaderPair((char *)"location",(char *)""),
-		new HeaderPair((char *)"max-forwards",(char *)""),
-		new HeaderPair((char *)"proxy-authenticate",(char *)""),
-		new HeaderPair((char *)"proxy-authorization",(char *)""),
-		new HeaderPair((char *)"range",(char *)""),
-		new HeaderPair((char *)"referer",(char *)""),
-		new HeaderPair((char *)"refresh",(char *)""),
-		new HeaderPair((char *)"retry-after",(char *)""),
-		new HeaderPair((char *)"server",(char *)""),
-		new HeaderPair((char *)"set-cookie",(char *)""),
-		new HeaderPair((char *)"strict-transport-security",(char *)""),
-		new HeaderPair((char *)"transfer-encoding",(char *)""),
-		new HeaderPair((char *)"user-agent",(char *)""),
-		new HeaderPair((char *)"vary",(char *)""),
-		new HeaderPair((char *)"via",(char *)""),
-		new HeaderPair((char *)"www-authenticate",(char *)"")
-	};
-	*/
+};

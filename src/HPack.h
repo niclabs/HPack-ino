@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <MemoryFree.h>
+
 
 
 char* byteToBits(byte b);
@@ -15,10 +15,7 @@ public:
 	uint32_t size();
 
 	static void operator delete(void *ptr);
-
-
 };
-
 
 class HPackDynamicTable {
 public:
@@ -43,9 +40,6 @@ private:
 
 class HPackData{
 public:
-	
-	
-	//bool send();
 	byte* encode();
 	void toString();
 
@@ -55,7 +49,6 @@ public:
 	HPackData(uint32_t max_size);
 
 	static void operator delete(void *ptr);
-	//HeaderPair* getHeaderPair();
 	byte* encodeInteger(uint32_t i, uint8_t prefix);
 	byte* encodeString(char* s, bool huffman);
 	
@@ -85,12 +78,6 @@ private:
 	const static uint32_t LiteralHeaderFieldWithoutIndexingPreamble = 0;
 	const static uint32_t LiteralHeaderFieldNeverIndexedPreamble = 16;
 	const static uint32_t DinamicTableUpdatePreamble = 32;
-
-	
-	
-	
-	//void insertNewEntry(uint32_t index, char* name, char* value);
-	//void updateDynamicTableSize(uint32_t newSize);
 };
 
 
@@ -135,31 +122,7 @@ public:
 
 	uint32_t decodeInteger(uint32_t pointer, uint8_t prefix);
 	char* decodeString(uint32_t pointer, bool huffman, uint32_t size);
-	
-	//HPack* encodeInteger(uint32_t i, uint8_t prefix);
-	//uint32_t decodeInteger(HPack* hp, uint8_t prefix);
-	//uint32_t decodeInteger(byte *octets, uint8_t prefix);
-	/*HPack* encodeString(char* s, bool huffman);
-	char* decodeString(byte* b, uint32_t s);
-	char* decodeString(HPack* hp, uint32_t slength, bool huffman);
-	char * decodeString(byte* octets, uint32_t size, uint32_t slength, bool huffman);
-	void decode();
-	HPack* encodeIndexedHeaderField(uint32_t index);
-	HPack* encodeLiteralHeaderFieldIndexing(uint32_t index, bool huffman, char* value);
-	HPack* encodeLiteralHeaderFieldIndexing(char* name, bool nameHuffman, char* value, bool valueHuffman);
-	HPack* encodeLiteralWithoutIndexing(uint32_t index, bool huffman, char* value);
-	HPack* encodeLiteralWithoutIndexing(char* name, bool nameHuffman, char* value, bool valueHuffman);
-	HPack* encodeLiteralNeverIndexed(uint32_t index, bool huffman, char* value);
-	HPack* encodeLiteralNeverIndexed(char* name, bool nameHuffman, char* value, bool valueHuffman);
-	HPack* encodeDynamicTableSizeUpdate(uint32_t maxSize);
-	*/
-	//HPackData* LiteralHeaderFieldIndexing(char* name, bool nameHuffman, char* value, bool valueHuffman);
-	//HeaderPair* decodeIndexedHeaderField(byte * data);
-	//HeaderPair* decodeLiteralHeaderField(HPack * hp, int prefix);
-	//uint32_t decodeDynamicTableSizeUpdate(HPack * hp);
 private:
-	//HeaderPair* findEntry(int index);
-	//HPackDynamicTable *dyn_table;
 	HeaderPair* findEntry(uint32_t index);
 	uint32_t buf_size;
 	byte *buf;// = new byte[1000];
@@ -186,10 +149,6 @@ private:
 	uint32_t max_header_buffer_size;
 	uint32_t dyn_table_size;
 	uint32_t max_header_table_size;
-	
-	
-	
-	//HeaderPair* findEntry(uint32_t index);
 };
 
 
@@ -347,10 +306,6 @@ const char value_59[] PROGMEM = "";
 const char value_60[] PROGMEM = "";
 
 const char value_61[] PROGMEM = "";
-
-
-
-
 
 // Then set up a table to refer to your strings.
 

@@ -1,11 +1,10 @@
 #include<Arduino.h>
+
 struct HuffmanSymbolCode {
 	uint16_t symbol;
 	uint32_t hexCode;
 	uint8_t length;
 };
-
-
 
 class Node{	
 public:
@@ -41,10 +40,6 @@ private:
 	Node* right=nullptr;
 };
 
-
-
-
-
 class HuffmanTree{
 public:
 	HuffmanTree();
@@ -54,7 +49,6 @@ public:
 private:
 	InternalNode *root;
 };
-
 
 const uint32_t huffman_code_table[] PROGMEM = {
 	0x1ff8u, 
