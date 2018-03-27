@@ -12,7 +12,7 @@ HuffmanTree::HuffmanTree(){
 	};
 
 	HuffmanSymbolCode* HuffmanTree::search(char* encoded){
-	Serial.println(F("HuffmanTree::search"));
+	//Serial.println(F("HuffmanTree::search"));
 		return root->search(encoded);
 	};
 
@@ -22,7 +22,7 @@ HuffmanTree::HuffmanTree(){
 	};
 
 	HuffmanSymbolCode* HuffmanTree::addChar(uint16_t index, uint32_t code, uint8_t coded_length, int count){
-	Serial.println(F("HuffmanTree::addChar"));
+	//Serial.println(F("HuffmanTree::addChar"));
 		return root->addChar(index,code, coded_length, count);
 	};
 
@@ -83,7 +83,7 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 	HuffmanSymbolCode* InternalNode::search(char* encoded){
 	//Serial.println("InternalNode::search");
 		if(encoded[0]=='\0'){
-			Serial.println(F("encoded fin"));
+	//		Serial.println(F("encoded fin"));
 			return nullptr;
 		}
 		char* rest = encoded+1;
@@ -158,7 +158,7 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 					return ((Leaf*)(this->right))->getValue();
 				}
 				else{
-					Serial.println(F("wtf right leaf already created??"));
+	//				Serial.println(F("wtf right leaf already created??"));
 					return nullptr;
 				}
 			}else{
@@ -169,7 +169,7 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 					return ((Leaf*)(this->left))->getValue();
 				}
 				else{
-					Serial.println(F("wtf left leaf already created??"));
+	//				Serial.println(F("wtf left leaf already created??"));
 					return nullptr;
 				}
 			}

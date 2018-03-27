@@ -38,6 +38,14 @@ private:
 
 };
 
+class HPackCodec{
+public:
+	static byte* encodeInteger(uint32_t integer, uint8_t prefix);
+	static byte* encodeString(char* string, bool huffman);
+	static uint32_t decodeInteger(byte* encodedInteger, uint8_t prefix, int max_buf_size, int start_pointer);
+	static uint32_t decodeString(byte* encodedString, bool huffman, uint32_t size);
+};
+
 class HPackData{
 public:
 	byte* encode();
@@ -49,12 +57,9 @@ public:
 	HPackData(uint32_t max_size);
 
 	static void operator delete(void *ptr);
-	byte* encodeInteger(uint32_t i, uint8_t prefix);
+	//byte* encodeInteger(uint32_t i, uint8_t prefix);
 	byte* encodeString(char* s, bool huffman);
-	
-
 	uint8_t findPrefix(byte octet);
-
 	//getters
 	uint8_t get_preamble();
 	uint32_t get_index();

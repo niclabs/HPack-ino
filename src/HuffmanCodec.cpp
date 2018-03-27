@@ -5,25 +5,25 @@ HuffmanTree* HuffmanCodec::tree = new HuffmanTree();
 
 
 HuffmanEncodedWord::HuffmanEncodedWord(HuffmanSymbolCode** sca, uint32_t size){
-	Serial.println(F("HuffmanEncodedWord"));
-	Serial.print(F("size"));
-		Serial.println(size);
+	//Serial.println(F("HuffmanEncodedWord"));
+	//Serial.print(F("size"));
+		//Serial.println(size);
 		uint32_t aux_enc_size = (uint32_t)0;
 		for(int i = 0; i< size; i++){
 			aux_enc_size += (uint32_t)(((HuffmanSymbolCode*)sca[i])->length);
-			Serial.print((char)(sca[i]->symbol));
-			Serial.print(F("->"));
-			Serial.print((sca[i]->symbol));
-			Serial.print(F("->"));
-			Serial.println(((HuffmanSymbolCode*)sca[i])->length);
+			//Serial.print((char)(sca[i]->symbol));
+			//Serial.print(F("->"));
+			//Serial.print((sca[i]->symbol));
+			//Serial.print(F("->"));
+			//Serial.println(((HuffmanSymbolCode*)sca[i])->length);
 		}
-		Serial.print(F("bits size"));
-		Serial.println(aux_enc_size);
+		//Serial.print(F("bits size"));
+		//Serial.println(aux_enc_size);
 		enc_size = aux_enc_size;//bits size
 		aux_enc_size = (uint32_t)(aux_enc_size%8)==0?aux_enc_size/8:aux_enc_size/8+1;//byte size;
 		enc_size_bytes = aux_enc_size;//bytes size
-		Serial.print(F("encbytesSize"));
-		Serial.println(enc_size_bytes);
+		//Serial.print(F("encbytesSize"));
+		//Serial.println(enc_size_bytes);
 		this->enc_word = new uint8_t[aux_enc_size];
 		for(int asd=0; asd<aux_enc_size; asd++){//Init with 0
 			this->enc_word[asd]=0;
@@ -55,7 +55,7 @@ HuffmanEncodedWord::HuffmanEncodedWord(HuffmanSymbolCode** sca, uint32_t size){
 	};
 
 static void HuffmanEncodedWord::operator delete(void *ptr){
-	Serial.println(F("HuffmanEncodedWord delete"));
+	//Serial.println(F("HuffmanEncodedWord delete"));
 	::operator delete[](((HuffmanEncodedWord*)ptr)->enc_word);	
     ::operator delete(ptr);
 }
@@ -67,11 +67,11 @@ uint32_t HuffmanEncodedWord::length(){
 	}
 
 void HuffmanEncodedWord::toString(){//TODO check this function
-	Serial.println(F("HuffmanEncodedWord::toString"));
+	//Serial.println(F("HuffmanEncodedWord::toString"));
 	int s = (enc_size%8==0?enc_size/8: enc_size/8+1);
 	//char *st = new char[s+1];
 	for(int i =0; i<s; i++){
-		Serial.println((char)enc_word[i]);
+		//Serial.println((char)enc_word[i]);
 	}
 }
 
@@ -85,47 +85,47 @@ char * HuffmanCodec::decodeBytes(uint8_t* word, uint32_t length){
 	int i = 0;
 
 
-	for(int j=0; j<length; j++){
-		Serial.println(word[j],BIN);
-	}
-	Serial.print(F("decoding Bytes: "));
+	//for(int j=0; j<length; j++){
+		//Serial.println(word[j],BIN);
+	//}
+	//Serial.print(F("decoding Bytes: "));
 	while((bit/8)<length){
 		HuffmanSymbolCode* c = decodeByte(word, length, bit);
 		if(c==nullptr){
-			Serial.println();
+		//	Serial.println();
 			break;
 		}	
 		*(str+i)=(char)c->symbol;
-		Serial.print((char)c->symbol);
+		//Serial.print((char)c->symbol);
 		bit +=c->length;
 		i++;
 	}
-	Serial.println();
+	//Serial.println();
 	char * new_str = new char[i+1];
 
 	for(int j=0;j<=i;j++){
 		new_str[j]=str[j];
 	}
 	delete[](str);
-	Serial.println(new_str);
-	Serial.print(F("length i "));
-	Serial.println(i);
+	//Serial.println(new_str);
+	//Serial.print(F("length i "));
+	//Serial.println(i);
 	return new_str;
 };
 
 HuffmanEncodedWord* HuffmanCodec::encodeWord(char* word){
 	//Serial.println("HuffmanCodec::encodeWord");
 	HuffmanSymbolCode** sca =  new HuffmanSymbolCode*[strlen(word)];
-	Serial.print(F("largo de la palabra: "));
-	Serial.println(strlen(word));
+	//Serial.print(F("largo de la palabra: "));
+	//Serial.println(strlen(word));
 	for(int i = 0; i<strlen(word); i++){
 
 		HuffmanSymbolCode* sc = (HuffmanSymbolCode*)encode((uint16_t)word[i]);
 
 		sca[i] = sc;
-		Serial.print(word[i]);
-		Serial.print(F(" encoded in symbol: "));
-		Serial.println((byte)sca[i]->hexCode,BIN);
+		//Serial.print(word[i]);
+		//Serial.print(F(" encoded in symbol: "));
+		//Serial.println((byte)sca[i]->hexCode,BIN);
 	//	ew[i] = sc;
 	}
 	HuffmanEncodedWord* hew = new HuffmanEncodedWord(sca,strlen(word));
@@ -142,7 +142,7 @@ HuffmanEncodedWord* HuffmanCodec::encodeWord(char* word){
 HuffmanSymbolCode* HuffmanCodec::decodeByte(uint8_t* word, uint32_t length, uint32_t bit){
 	//Serial.println("HuffmanCodec::decodeByte");
 	if(bit/8>=length){
-		Serial.println(F("nullptr"));
+		//Serial.println(F("nullptr"));
 		return nullptr;
 	}
 	return tree->searchBit(word,length,bit);
@@ -153,7 +153,7 @@ HuffmanSymbolCode* HuffmanCodec::decode(char* encoded){
 };
 
 HuffmanSymbolCode* HuffmanCodec::encode(uint16_t c){
-	Serial.println(F("huffmanCodec::encode"));
+	//Serial.println(F("huffmanCodec::encode"));
 	uint32_t coded_symbol = (uint32_t)pgm_read_dword_near(&(huffman_code_table[c]));
 	uint8_t coded_length = (uint8_t)pgm_read_dword_near(&(huffman_length_table[c]));
 	HuffmanSymbolCode* encoded = (HuffmanSymbolCode*)malloc(sizeof(HuffmanSymbolCode));
@@ -161,9 +161,9 @@ HuffmanSymbolCode* HuffmanCodec::encode(uint16_t c){
 	encoded->hexCode = coded_symbol;
 	encoded->length = coded_length;
 
-	Serial.println(encoded->symbol);
-	Serial.println(encoded->hexCode);
-	Serial.println(encoded->hexCode,BIN);
-	Serial.println(encoded->length);
+	//Serial.println(encoded->symbol);
+	//Serial.println(encoded->hexCode);
+	//Serial.println(encoded->hexCode,BIN);
+	//Serial.println(encoded->length);
 	return encoded;
 };
