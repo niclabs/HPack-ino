@@ -92,7 +92,8 @@ char * HuffmanCodec::decodeBytes(uint8_t* word, uint32_t length){
 	while((bit/8)<length){
 		HuffmanSymbolCode* c = decodeByte(word, length, bit);
 		if(c==nullptr){
-		//	Serial.println();
+			//Serial.println();
+			i++;
 			break;
 		}	
 		*(str+i)=(char)c->symbol;
@@ -101,11 +102,12 @@ char * HuffmanCodec::decodeBytes(uint8_t* word, uint32_t length){
 		i++;
 	}
 	//Serial.println();
-	char * new_str = new char[i+1];
+	char * new_str = new char[i];
 
-	for(int j=0;j<=i;j++){
+	for(int j=0;j<i-1;j++){
 		new_str[j]=str[j];
 	}
+	new_str[i-1]='\0';
 	delete[](str);
 	//Serial.println(new_str);
 	//Serial.print(F("length i "));

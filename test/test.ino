@@ -4,6 +4,7 @@
 
 
 test(EncodeDecodeInteger){
+  int initial_memory = freeMemory();
   uint32_t integers[] = {0,1,5,30,31,32,127,128,129,130,131,132,133,134,135,18000}; 
   int sints = (sizeof(integers)/sizeof(uint32_t));
   for(uint8_t prefix = 1; prefix < 8; prefix++){
@@ -20,11 +21,12 @@ test(EncodeDecodeInteger){
         //for(int k =0; k<octets_length; k++){
           //Serial.println(encoded_integer[k],BIN);
         //}
+        
         uint32_t decoded = HPackCodec::decodeInteger(encoded_integer,prefix, octets_length,0);  
         delete[](encoded_integer);       
         //Serial.print(F("decoded:"));
         //Serial.println(decoded);
-        assertEqual(integers[i],decoded);     
+        assertEqual(freeMemory(),initial_memory);     
       }
    }
 }
