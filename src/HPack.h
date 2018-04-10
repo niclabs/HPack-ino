@@ -44,7 +44,7 @@ public:
 	static byte* encodeString(char* string, bool huffman);
 	
 	static uint32_t decodeInteger(byte* encodedInteger, uint8_t prefix, int max_buf_size, int start_pointer);
-	static char* decodeString(byte* encodedString, bool huffman, uint32_t size);
+	static char* decodeString(byte* encodedString, bool huffman, uint32_t size, int pointer);
 private:
 	static byte* encodeHuffmanString(char* s);
 	static byte* encodeNonHuffmanString(char* s);
