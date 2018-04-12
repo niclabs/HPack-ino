@@ -5,6 +5,11 @@
 char* byteToBits(byte b);
 uint32_t getOctetsLength(uint32_t I, uint8_t prefix);
 
+struct EncodedData {
+	byte* encoded_data;
+	uint8_t length;
+};
+
 class HeaderPair{
 public:
 	char* name;
@@ -13,7 +18,6 @@ public:
 	void toString();
 	HeaderPair* duplicateHeaderPair();
 	uint32_t size();
-
 	static void operator delete(void *ptr);
 };
 
@@ -40,19 +44,19 @@ private:
 
 class HPackCodec{
 public:
-	static byte* encodeInteger(uint32_t integer, uint8_t prefix);
-	static byte* encodeString(char* string, bool huffman);
+	static EncodedData* encodeInteger(uint32_t integer, uint8_t prefix);
+	static EncodedData* encodeString(char* string, bool huffman);
 	
 	static uint32_t decodeInteger(byte* encodedInteger, uint8_t prefix, int max_buf_size, int start_pointer);
 	static char* decodeString(byte* encodedString, bool huffman, uint32_t size, int pointer);
 private:
-	static byte* encodeHuffmanString(char* s);
-	static byte* encodeNonHuffmanString(char* s);
+	static EncodedData* encodeHuffmanString(char* s);
+	static EncodedData* encodeNonHuffmanString(char* s);
 };
 
 class HPackData{
 public:
-	byte* encode();
+	EncodedData* encode();
 	void toString();
 
 	HPackData(uint8_t preamble, uint32_t index);
@@ -62,7 +66,7 @@ public:
 
 	static void operator delete(void *ptr);
 	//byte* encodeInteger(uint32_t i, uint8_t prefix);
-	byte* encodeString(char* s, bool huffman);
+	EncodedData* encodeString(char* s, bool huffman);
 	uint8_t findPrefix(byte octet);
 	//getters
 	uint8_t get_preamble();

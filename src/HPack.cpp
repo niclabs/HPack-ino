@@ -1,6 +1,8 @@
 #include "HPack.h"
 #include "HuffmanCodec.h"
 
+
+
 /*Returns a string with de byte bits*/
 char* byteToBits(byte b){
 	char *s = new char[9];
@@ -289,7 +291,7 @@ void HPackData::toString(){
 
 
 
-byte* HPackCodec::encodeInteger(uint32_t integer, uint8_t prefix){
+EncodedData* HPackCodec::encodeInteger(uint32_t integer, uint8_t prefix){
 	//Serial.println(F("----HPackCodec::encodeInteger"));
 	byte* octets;
 	uint32_t octets_size;
@@ -298,7 +300,7 @@ byte* HPackCodec::encodeInteger(uint32_t integer, uint8_t prefix){
 	//Serial.println(max_first_octet);
 	if(integer < max_first_octet){
 		octets_size = 1;
-		octets = new byte[octets_size+1];
+		octets = new byte[octets_size];
 		octets[0] = (byte)(integer << (8 - prefix));
 		octets[0] = (byte)octets[0] >> (8 - prefix);
 		//Serial.println(octets[0],BIN);
@@ -310,7 +312,7 @@ byte* HPackCodec::encodeInteger(uint32_t integer, uint8_t prefix){
 		integer = integer - b0;
 		uint32_t k = log(integer)/log(128);
 		octets_size = k+2;
-		octets = new byte[octets_size+1];
+		octets = new byte[octets_size];
 		octets[0] = b0;
 		//Serial.println(octets[0],BIN);
 		
@@ -328,8 +330,10 @@ byte* HPackCodec::encodeInteger(uint32_t integer, uint8_t prefix){
 		//Serial.println(octets[i],BIN);
 
 	}
-	octets[octets_size]='\0';
-	return octets;
+	EncodedData *ed = (EncodedData*)malloc(sizeof(EncodedData));
+	ed->encoded_data = octets;
+	ed->length = octets_size;
+	return ed;
 };
 
 /*byte* HPackData::encodeString(char* s, bool huffman){
@@ -389,57 +393,72 @@ byte* HPackCodec::encodeInteger(uint32_t integer, uint8_t prefix){
 */
 
 
-byte* HPackCodec::encodeString(char* s, bool huffman){
+EncodedData* HPackCodec::encodeString(char* s, bool huffman){
 	//Serial.println(F("----HPackData::encodeString"));
 	//Serial.println(s);
-	
+	//EncodedData *ed = (EncodedData*)malloc(sizeof(EncodedData));
+
+
 	if(huffman){
+			//ed->encoded_data = octets;
+			//ed->length = octets_size;
 		return encodeHuffmanString(s);
 	}else{
+			//ed->encoded_data = octets;
+			//ed->length = octets_size;
 		return encodeNonHuffmanString(s);
 	}
 };
-byte* HPackCodec::encodeNonHuffmanString(char* s){
+EncodedData* HPackCodec::encodeNonHuffmanString(char* s){
+	EncodedData *ed = (EncodedData*)malloc(sizeof(EncodedData));
 	//Serial.println(F("Encoding non huffman string"));
-	byte* encoded_string_length = encodeInteger(strlen(s),7);
+	EncodedData* encoded_string_length = encodeInteger(strlen(s),7);
 	//Serial.print(F("encoded_string_length: "));
 	//Serial.println(encoded_string_length[0],BIN);
-	byte *encoded_string = new byte[strlen(s)+strlen((char*)encoded_string_length)+1];
-	for(uint32_t i = 0; i<strlen((char*)encoded_string_length); i++){
-		encoded_string[i]=encoded_string_length[i];
+	byte *encoded_string = new byte[strlen(s)+encoded_string_length->length+1];
+	for(uint32_t i = 0; i<encoded_string_length->length; i++){
+		encoded_string[i]=encoded_string_length->encoded_data[i];
 	}
 	for(uint32_t i = 0; i< strlen(s); i++){
-		encoded_string[i+strlen((char*)encoded_string_length)]=s[i];
+		encoded_string[i+strlen((char*)encoded_string_length->encoded_data)]=s[i];
 	}
-	encoded_string[strlen(s)+strlen((char*)encoded_string_length)]='\0';
-	delete[](encoded_string_length);
+	encoded_string[strlen(s)+encoded_string_length->length]='\0';
+	delete[](encoded_string_length->encoded_data);
+	delete(encoded_string_length);
 	//Serial.print(F("encoded: "));
 	//Serial.println((char*)encoded_string);
-	return encoded_string;
+	ed->encoded_data = encoded_string;
+	ed->length = strlen(s)+encoded_string_length->length;
+	return ed;
 }
 
-byte* HPackCodec::encodeHuffmanString(char* s){
+EncodedData* HPackCodec::encodeHuffmanString(char* s){
+	EncodedData *ed = (EncodedData*)malloc(sizeof(EncodedData));
 	//Serial.println(F("Encoding huffman string"));
 	//encode word
 	HuffmanEncodedWord *encoded_word = HuffmanCodec::encodeWord(s);		
 	//pack and encode encoded_word length
-	byte* encoded_string_length = encodeInteger(encoded_word->length(),7);
+	EncodedData* encoded_string_length = encodeInteger(encoded_word->length(),7);
 	//Serial.print(F("encoded_word_length"));
 	//Serial.println(encoded_word->length());
 
-	encoded_string_length[0] |= (uint8_t)128;
-	uint32_t new_size = encoded_word->length()+strlen((char*)encoded_string_length)+1;
+	encoded_string_length->encoded_data[0] |= (uint8_t)128;
+	uint32_t new_size = encoded_word->length()+encoded_string_length->length;
 	byte * encoded_string = new byte[new_size];
-	for(uint32_t i = 0; i < strlen((char*)encoded_string_length); i++){
-		encoded_string[i] = encoded_string_length[i];
+	for(uint32_t i = 0; i < encoded_string_length->length; i++){
+		encoded_string[i] = encoded_string_length->encoded_data[i];
 	}
 	
 	for(uint32_t i = 0; i < encoded_word->length(); i++){
-		encoded_string[i+strlen((char*)encoded_string_length)] = encoded_word->enc_word[i];
+		encoded_string[i+encoded_string_length->length] = encoded_word->enc_word[i];
 	}
-	delete[](encoded_string_length);
+	delete[](encoded_string_length->encoded_data);
+	delete(encoded_string_length);
+
 	delete(encoded_word);
-	encoded_string[new_size-1]='\0';
+	//encoded_string[new_size]='\0';
+	//TODO check this (up)
+
 	//Serial.print(F("encoded: "));
 	//Serial.println((char*)encoded_string);
 	//for(int i =0; i< new_size; i++){
@@ -447,9 +466,11 @@ byte* HPackCodec::encodeHuffmanString(char* s){
 		//Serial.println(bits);	
 		//delete[](bits);
 	//}
-	
 
-	return encoded_string;
+	ed->encoded_data = encoded_string;
+	ed->length = new_size;
+
+	return ed;
 };
 uint8_t HPackData::findPrefix(byte octet){
 
@@ -468,56 +489,62 @@ uint8_t HPackData::findPrefix(byte octet){
 
 
 
-byte* HPackData::encode(){
+EncodedData* HPackData::encode(){
 	//Serial.println(F("---HPackData::encode"));
 	if(preamble == (uint8_t)32){ // dynamicTableSizeUpdate
-		byte* encoded_max_size = HPackCodec::encodeInteger(this->max_size, 5);
-		encoded_max_size[0] |= this->preamble;
-		return encoded_max_size;
+		EncodedData* encoded_max_size = HPackCodec::encodeInteger(this->max_size, 5);
+		encoded_max_size->encoded_data[0] |= this->preamble;
+		return encoded_max_size;//->encoded_data;
 	}else{
 		uint8_t prefix = findPrefix(preamble);
-		byte* encoded_index = HPackCodec::encodeInteger(this->index, prefix);		
-		encoded_index[0] |= this->preamble;
+		EncodedData* encoded_index = HPackCodec::encodeInteger(this->index, prefix);		
+		encoded_index->encoded_data[0] |= this->preamble;
 		if(preamble == (uint8_t)128){
 			//DO stuff ?		
-			return encoded_index;
+			return encoded_index;//->encoded_data;
 		}else{
+
+
+
 			uint32_t index_octets_length = getOctetsLength(this->index,prefix);
-			byte* encoded_value = HPackCodec::encodeString(this->value_string, this->value_huffman);
-			uint32_t encoded_value_octets_length = strlen((char*)encoded_value);
+			EncodedData* encoded_value = HPackCodec::encodeString(this->value_string, this->value_huffman);
+			uint32_t encoded_value_octets_length = encoded_value->length;
 			uint32_t octets_size = index_octets_length+encoded_value_octets_length;
 
-			byte* encoded_name;
+			EncodedData* encoded_name;
 			uint32_t encoded_name_octets_length = 0;
 			if(this->index==(uint8_t)0){
 				encoded_name = HPackCodec::encodeString(this->name_string, this->name_huffman);
-				encoded_name_octets_length = strlen((char*)encoded_name);
+				encoded_name_octets_length = encoded_name->length;
 				octets_size += encoded_name_octets_length;
 			}
-			byte* octets = new byte[octets_size+1];
+			byte* octets = new byte[octets_size];
 
 			uint32_t aux = 0;
 			for(uint32_t i = 0; i< index_octets_length; i++){
-				octets[i]=encoded_index[i];
+				octets[i]=encoded_index->encoded_data[i];
 				
 			}
 			aux = aux + index_octets_length;
-			delete[](encoded_index);
+			delete[](encoded_index->encoded_data);
+			delete(encoded_index);
 			for(uint32_t i =0; i< encoded_name_octets_length; i++){
-				octets[aux + i] = encoded_name[i];
+				octets[aux + i] = encoded_name->encoded_data[i];
 				
 			}
 			aux = aux + encoded_name_octets_length;
 			if(this->index==0){
-				delete[](encoded_name);
+				delete[](encoded_name->encoded_data);
+				delete(encoded_name);
 			}
 			for(uint32_t i =0; i<encoded_value_octets_length; i++){
-				octets[aux + i] = encoded_value[i];
+				octets[aux + i] = encoded_value->encoded_data[i];
 				
 			}
 			aux = aux + encoded_value_octets_length;
-			delete[](encoded_value);
-			octets[aux] = '\0';
+			delete[](encoded_value->encoded_data);
+			delete(encoded_value);
+			//octets[aux] = '\0';
 
 			//Serial.println(F("octets encoded: "));
 			for(int i =0; i< aux; i++){
@@ -536,7 +563,11 @@ byte* HPackData::encode(){
 			//DO stuff ?
 			}
 
-			return octets;
+			EncodedData *ed = (EncodedData*)malloc(sizeof(EncodedData));
+			ed->encoded_data = octets;
+			ed->length = octets_size;
+
+			return ed;
 		}
 	}
 };
@@ -567,15 +598,15 @@ uint32_t HeaderBuffer::availableBufSize(){
 	else{
 		availableSize = buf_size+first-next;
 	}
-	Serial.println(availableSize);
+	//Serial.println(availableSize);
 	return availableSize;
 };
 
 uint32_t HeaderBuffer::addData(HPackData * data){
-	//Serial.println(F("----addHPackData"));
-	byte* encoded_data = data->encode();
+	Serial.println(F("----addHPackData"));
+	EncodedData* encoded_data = data->encode();
 
-	int encoded_data_length = strlen((char*)encoded_data);
+	int encoded_data_length = encoded_data->length; //TODO fix this-> cuando preamble and index ==0-> strlen==0
 	if(encoded_data_length > availableBufSize()){
 		Serial.println(F("No buffer available"));
 		return 0;
@@ -617,15 +648,16 @@ uint32_t HeaderBuffer::addData(HPackData * data){
 	//Serial.println(encoded_data_length);
 
 	for(uint32_t i = 0; i<encoded_data_length; i++){
-		this->buf[next] = encoded_data[i];
+		this->buf[next] = encoded_data->encoded_data[i];
 		next = (next+1)%buf_size;
-		/*char * bits = byteToBits(encoded_data[i]);
+		char * bits = byteToBits(encoded_data->encoded_data[i]);
 		Serial.println(bits);
-		Serial.println(encoded_data[i]);
-		delete[](bits);*/
+		Serial.println(encoded_data->encoded_data[i]);
+		delete[](bits);
 
 	}
-	delete[](encoded_data);
+	delete[](encoded_data->encoded_data);
+	delete(encoded_data);
 	return encoded_data_length;
 
 };
@@ -845,7 +877,7 @@ uint32_t HeaderBuffer::increasePointer(uint32_t pointer, uint32_t add){
 }
 
 HPackData* HeaderBuffer::getNext(){
-	//Serial.println(F("----getNext"));
+	Serial.println(F("----getNext"));
 	
 	if(buf_size==availableBufSize()){
 		Serial.println(F("no more octets..."));
@@ -853,6 +885,7 @@ HPackData* HeaderBuffer::getNext(){
 	}
 
 	byte first_octet = buf[first];
+	Serial.println(first_octet,BIN);
 	if(first_octet&(byte)128){//indexedHeaderField
 		Serial.println(F("Decoding indexedHeaderField"));
 		uint32_t index = decodeInteger(first,7);
@@ -890,7 +923,7 @@ HPackData* HeaderBuffer::getNext(){
 			Serial.println(F("Decoding literalHeaderFieldNeverIndexed"));
 			preamble=(byte)16;
 			prefix=4;
-		}else if(first_octet&(byte)0){//literalHeaderFieldNeverIndexed
+		}else {//if(first_octet&(byte)0) literalHeaderFieldNeverIndexed
 			Serial.println(F("Decoding literalHeaderFieldWithoutIndexing"));
 			preamble=(byte)0;
 			prefix = 4;

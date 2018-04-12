@@ -13,7 +13,7 @@ test(EncodeDecodeInteger){
         //Serial.print(F("prefix:"));
         //Serial.println(prefix);
         
-        byte * encoded_integer = HPackCodec::encodeInteger(integers[i],prefix);
+        EncodedData * encoded_integer = HPackCodec::encodeInteger(integers[i],prefix);
         uint32_t octets_length = getOctetsLength(integers[i],prefix);
         //Serial.print(F("encoded length: "));
         //Serial.println(octets_length);
@@ -21,8 +21,9 @@ test(EncodeDecodeInteger){
           //Serial.println(encoded_integer[k],BIN);
         //}
         
-        uint32_t decoded = HPackCodec::decodeInteger(encoded_integer,prefix, octets_length,0);  
-        delete[](encoded_integer);       
+        uint32_t decoded = HPackCodec::decodeInteger(encoded_integer->encoded_data,prefix, octets_length,0);  
+        delete[](encoded_integer->encoded_data);       
+        delete(encoded_integer);    
         //Serial.print(F("decoded:"));
         //Serial.println(decoded);
         assertEqual(freeMemory(),initial_memory);     
@@ -37,18 +38,19 @@ test(EncodeDecodeStringNoHuffman){
 
   string = "Holakasjhflaskjhdflsadkjfhlasdjhasldfhajklsdhflajshlasjhdflsadjfhañlsdhflasdjfhlahfdlasfflajsdfhlajsdfh!\0";
   huffman = false;
-  byte * encoded_string = HPackCodec::encodeString(string,huffman);
+  EncodedData * encoded_string = HPackCodec::encodeString(string,huffman);
 
   //Serial.println((char*)encoded_string);
   //Serial.println(strlen((char*)encoded_string));
-  char* string_decoded = HPackCodec::decodeString(encoded_string, huffman, strlen((char*)encoded_string),0);
+  char* string_decoded = HPackCodec::decodeString(encoded_string->encoded_data, huffman, encoded_string->length,0);
 
   //Serial.println(strlen(string));
   //Serial.println(strlen(string_decoded));
   //Serial.println(string_decoded[5],BIN);
   
   assertEqual(string, string_decoded);
-  delete[](encoded_string);
+  delete[](encoded_string->encoded_data);
+  delete(encoded_string);
   delete[](string_decoded);
   assertEqual(freeMemory(),initial_memory);     
 }
@@ -60,18 +62,19 @@ test(EncodeDecodeStringHuffman){
 
   string = "Holaasdasdaksjdhaskjdhkjahdkjasd!|1\0";
   huffman = true;
-  byte * encoded_string = HPackCodec::encodeString(string,huffman);
+  EncodedData * encoded_string = HPackCodec::encodeString(string,huffman);
 
   //Serial.println((char*)encoded_string);
   //Serial.println(strlen((char*)encoded_string));
-  char* string_decoded = HPackCodec::decodeString(encoded_string, huffman, strlen((char*)encoded_string), 0);
+  char* string_decoded = HPackCodec::decodeString(encoded_string->encoded_data, huffman, encoded_string->length, 0);
 
   //Serial.println(strlen(string));
   //Serial.println(strlen(string_decoded));
   //Serial.println(string_decoded[5],BIN);
   
   assertEqual(string, string_decoded);
-  delete[](encoded_string);
+  delete[](encoded_string->encoded_data);
+  delete(encoded_string);
   delete[](string_decoded);
   assertEqual(freeMemory(),initial_memory);     
 }
@@ -128,7 +131,6 @@ test(LiteralHeaderFieldNeverIndexedWithoutIndexNoHuffman){
   assertEqual(freeMemory(),initial_memory);    
 }
 
-
 test(LiteralHeaderFieldNeverIndexedWithIndexHuffman){
   Serial.println(F("Test LiteralHeaderFieldNeverIndexedWithIndexHuffman"));
   int initial_memory = freeMemory();
@@ -153,7 +155,6 @@ test(LiteralHeaderFieldNeverIndexedWithIndexHuffman){
   
   
 }
-
 
 test(LiteralHeaderFieldNeverIndexedWithIndexNoHuffman){
   Serial.println(F("Test LiteralHeaderFieldNeverIndexedWithIndexNOHuffman"));
@@ -180,9 +181,112 @@ test(LiteralHeaderFieldNeverIndexedWithIndexNoHuffman){
 
 
 
-test(ok){
-  assertNotEqual(2,3);//,F("notequal!!"));
+test(LiteralHeaderFieldWithoutIndexingWithIndexHuffman){
+  Serial.println(F("Test LiteralHeaderFieldWithoutIndexingWithIndexHuffman"));
+  int initial_memory = freeMemory();
+  HPackData *hp, *hpd; 
+  uint32_t incomming_buffer_max_size = 100;
+  uint32_t max_table_size= 100;
+  HPack* hpack = new HPack(incomming_buffer_max_size, max_table_size);
+  HeaderBuffer *hb = hpack->hb;
+  char * value_string = (char*)"value1234567890\0";
+  hp = hb->literalWithoutIndexing(1, true,value_string);
+  int size_added = hb->addData(hp);
+  delete(hp);
+  hpd = hb->getNext();
+  HeaderPair* hp1 = hb->getHeaderPair(hpd);
+  delete(hpd);
+  assertEqual((char*)":authority\0",hp1->name);
+  assertEqual(value_string,hp1->value);
+  delete(hp1);
+  
+  delete(hpack);
+  assertEqual(freeMemory(),initial_memory);    
+  
+  
 }
+
+test(LiteralHeaderFieldWithoutIndexingWithIndexNoHuffman){
+  Serial.println(F("Test LiteralHeaderFieldWithoutIndexingWithIndexNOHuffman"));
+  int initial_memory = freeMemory();
+  HPackData *hp, *hpd; 
+  uint32_t incomming_buffer_max_size = 100;
+  uint32_t max_table_size= 100;
+  HPack* hpack = new HPack(incomming_buffer_max_size, max_table_size);
+  HeaderBuffer *hb = hpack->hb;
+  char * value_string = (char*)"value1234567890\0";
+  hp = hb->literalWithoutIndexing(1, false,value_string);
+  int size_added = hb->addData(hp);
+  delete(hp);
+  hpd = hb->getNext();
+  HeaderPair* hp1 = hb->getHeaderPair(hpd);
+  delete(hpd);
+  assertEqual((char*)":authority\0",hp1->name);
+  assertEqual(value_string,hp1->value);
+  delete(hp1);
+  
+  delete(hpack);
+  assertEqual(freeMemory(),initial_memory);      
+}
+
+
+test(LiteralHeaderFieldWithoutIndexingWithoutIndexHuffman){
+  Serial.println(F("Test LiteralHeaderFieldWithoutIndexingWithoutIndexHuffman"));
+  int initial_memory = freeMemory();
+  HPackData *hp, *hpd; 
+  uint32_t incomming_buffer_max_size = 100;
+  uint32_t max_table_size= 100;
+  HPack* hpack = new HPack(incomming_buffer_max_size, max_table_size);
+  HeaderBuffer *hb = hpack->hb;
+  char * name_string = (char*)"holasd\0";
+  char * value_string = (char*)"value1234567890\0";
+  hp = hb->literalWithoutIndexing(true, name_string, true,value_string);
+  int size_added = hb->addData(hp);
+  delete(hp);
+  
+  hpd = hb->getNext();
+  HeaderPair* hp1 = hb->getHeaderPair(hpd);
+  delete(hpd);
+  assertEqual(name_string,hp1->name);
+  assertEqual(value_string,hp1->value);
+  delete(hp1);
+  delete(hpack);
+  assertEqual(freeMemory(),initial_memory);     
+}
+
+
+test(LiteralHeaderFieldWithoutIndexingWithoutIndexNoHuffman){
+  Serial.println(F("Test LiteralHeaderFieldWithoutIndexingWithoutIndexNoHuffman"));
+  int initial_memory = freeMemory();
+  HPackData *hp, *hpd; 
+  uint32_t incomming_buffer_max_size = 100;
+  uint32_t max_table_size= 100;
+  HPack* hpack = new HPack(incomming_buffer_max_size, max_table_size);
+  HeaderBuffer *hb = hpack->hb;
+  
+  char * name_string = (char*)"holasd\0";
+  char * value_string = (char*)"value1234567890\0";
+
+  
+  hp = hb->literalWithoutIndexing(false, name_string, false,value_string);
+  int size_added = hb->addData(hp);
+  delete(hp);
+  
+  hpd = hb->getNext();
+  HeaderPair* hp1 = hb->getHeaderPair(hpd);
+  delete(hpd);
+  assertEqual(name_string,hp1->name);
+  assertEqual(value_string,hp1->value);
+  delete(hp1);
+  delete(hpack);
+  assertEqual(freeMemory(),initial_memory);    
+}
+
+
+
+/*test(ok){
+  assertNotEqual(2,3);//,F("notequal!!"));
+}*/
 
 void setup(){
   Serial.begin(9600);
