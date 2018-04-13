@@ -73,7 +73,7 @@ void HeaderPair::toString(){
 
 HPackDynamicTable::HPackDynamicTable(uint32_t max_size){
 	this-> max_size = max_size;
-	table_length = max_size / 5;
+	table_length = (uint32_t)(max_size / 32)+1;
 	table = new HeaderPair*[table_length];
 	first = 0;
 	next = 0;
@@ -87,7 +87,7 @@ static void HPackDynamicTable::operator delete(void *ptr){
 	for(int i = ((HPackDynamicTable*)ptr)->first,k=0; 
 		k<((HPackDynamicTable*)ptr)->length(); 
 		(i=i+1)%((HPackDynamicTable*)ptr)->table_length,k++){
-
+		Serial.println(F("delete entry sd"));
 		HeaderPair::operator delete(((HPackDynamicTable*)ptr)->table[i]);			
 	}
 	::operator delete[](((HPackDynamicTable*)ptr)->table);
@@ -99,7 +99,7 @@ uint32_t HPackDynamicTable::size(){
 	uint32_t total_size = 0;
 	uint32_t table_length_used = this->length();
 	for(uint32_t i = first; i < table_length_used; i++){
-		total_size += table[i % table_length]->size() + 4;
+		total_size += table[i % table_length]->size() + 32;
 	}
 	return total_size;
 };
@@ -107,18 +107,18 @@ uint32_t HPackDynamicTable::size(){
 //get amount of entries
 uint32_t HPackDynamicTable::length(){
 	uint32_t table_length_used = first <= next ? (next - first) % table_length : table_length - first + next;
-	return table_length_used;
-};
+	return table_length_used
+;};
 
 void HPackDynamicTable::deleteEntry(uint32_t index){
-	delete[](table[index]->name);
-	delete[](table[index]->value);
+	//delete[](table[index]->name);
+	//delete[](table[index]->value);
 	delete(table[index]);
 };
 
 //and a header pair to the dynamic table (delete others if needed)
 bool HPackDynamicTable::addEntry(HeaderPair* entry){
-	uint32_t entry_size = entry->size()+4;
+	uint32_t entry_size = entry->size()+32;
 	if(entry_size > max_size){
 		Serial.println(F("entry exceeds size of table"));
 		return false;
@@ -148,33 +148,40 @@ HeaderPair* HPackDynamicTable::findEntry(uint32_t index){
 };
 
 bool HPackDynamicTable::resize(uint32_t new_max_size){
-	uint32_t new_table_length = new_max_size / 5;
+	uint32_t new_table_length = (uint32_t)(new_max_size / 32) + 1;
 	HeaderPair ** new_table =  new HeaderPair*[new_table_length];
-	uint32_t new_first = new_table_length-1;
+	uint32_t new_first = 0;
 	uint32_t new_next = 0;
+	
 	uint32_t new_size = 0;
-	uint32_t i = (next + table_length - 1) % table_length;
+	uint32_t i = first;
 	uint32_t j = 0; //counter of already used table slots
+
 	uint32_t table_length_used = length();
-	while( new_size < new_max_size){
-		if(j < table_length_used){//if slot is ussed
-			new_table[new_first] = table[i];//assign data in old table to new table
-			i = (i + table_length - 1) % table_length;
-			j++;
-			new_first = (new_first + new_table_length - 1) % new_table_length;
-			new_size += table[i]->size()+4;
-		}else{
-			break;
-		}
+	Serial.print(F("dynamic table used length: "));
+	Serial.println(table_length_used);
+	
+	while(j < table_length_used && new_size + table[i]->size()+32 <= new_max_size){		
+		Serial.println(F("moving entry to new table"));
+		new_table[j] = table[i];//assign data in old table to new table
+		i = (i + 1) % table_length;
+		j++;
+		new_next = (new_next + 1) % new_table_length;
+		new_size += table[i]->size()+32;
 	}
 
 	//delete the older table and its -unused- content
 	//int table_length_used = length(); already declared above
 	uint32_t new_table_length_used = new_first <= new_next ? (new_next - new_first) % new_table_length : new_table_length - new_first + new_next;
 	uint32_t unused_data_size = table_length_used - new_table_length_used;
-	for(uint32_t i = 0; i < unused_data_size; i++){
-		deleteEntry((i + first) % table_length);
+	for(uint32_t k = 0; k < unused_data_size; k++){
+		Serial.print(F("deleting older table entries: "));
+		Serial.println((k + first) % table_length);
+		
+		deleteEntry((k + first) % table_length);
 	}
+
+	Serial.println(F("deleted older table entries"));
 	delete[](table);//Check this...
 	//reassign new data
 	max_size = new_max_size;
@@ -218,18 +225,18 @@ HPackData::HPackData(uint32_t max_size){
 };
 
 static void HPackData::operator delete(void *ptr) {
-	//Serial.println(F("HPackData delete"));
+	Serial.println(F("HPackData delete"));
 
 	uint8_t preamble = ((HPackData*)ptr)->preamble;
 	
 	if(preamble!=(uint8_t)32 && preamble!=(uint8_t)128 ){
 		uint32_t index = ((HPackData*)ptr)->index;
 		if(index==0){
-			//Serial.println(F("Deleting name"));
+			Serial.println(F("Deleting name"));
 			::operator delete[](((HPackData*)ptr)->name_string);
 			//Serial.println(F("Deleted name"));
 		}
-		//Serial.println(F("Deleting value"));
+		Serial.println(F("Deleting value"));
 		::operator delete[](((HPackData*)ptr)->value_string);
 		//Serial.println(F("Deleted value"));
 		
@@ -644,6 +651,7 @@ uint32_t HeaderBuffer::addData(HPackData * data){
 	if(preamble==(uint8_t)32){//preamble==(uint8_t)32){ dynamic table size update
 		//modify dynamic table size
 		//TODO check size
+		Serial.print(F("adding dynamic table size update"));
 		dyn_table->resize(data->get_max_size());
 	}
 	
@@ -914,13 +922,15 @@ HPackData* HeaderBuffer::getNext(){
 		}else if(first_octet&(byte)32){//dynamicTableSizeUpdate
 			Serial.println(F("Decoding dynamicTableSizeUpdate:"));
 			uint32_t maxSize = decodeInteger(first,5);
+				Serial.print(F("new size"));
+				Serial.println(maxSize);
 			if(maxSize==-1){
 				Serial.println(F("dynamicTableSizeUpdate: error no next"));
 				return nullptr;
 			}
 			uint32_t octets_length = getOctetsLength(maxSize,5);
-
-			increaseFirst(octets_length); //Check if actualize this here or not...
+			first = (first+octets_length)%buf_size;
+			//increaseFirst(octets_length); //Check if actualize this here or not...
 			return dynamicTableSizeUpdate(maxSize);
 		}else if(first_octet&(byte)16){//literalHeaderFieldWithoutIndexing
 			Serial.println(F("Decoding literalHeaderFieldNeverIndexed"));

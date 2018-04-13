@@ -2,7 +2,7 @@
 #include <ArduinoUnit.h>
 #include "HPack.h"
 
-
+/*
 test(EncodeDecodeInteger){
   int initial_memory = freeMemory();
   uint32_t integers[] = {0,1,5,30,31,32,127,128,129,130,131,132,133,134,135,18000}; 
@@ -466,7 +466,137 @@ test(IndexedHeaderFieldHuffmanDynamic){
   delete(hpack);
   assertEqual(freeMemory(),initial_memory);      
 }
+*/
 
+
+test(DynamicTableSizeUpdateDecrease){
+  Serial.println(F("Test DynamicTableSizeUpdateIncrease"));
+  int initial_memory = freeMemory();
+  HPackData *hp1, *hp2, *hp3, *hpd1, *hpd2, *hpd3; 
+  uint32_t incomming_buffer_max_size = 100;
+  uint32_t max_table_size= 100;
+  HPack* hpack = new HPack(incomming_buffer_max_size, max_table_size);
+  HeaderBuffer *hb = hpack->hb;
+  char * name_string = (char*)"holasd\0";
+  char * value_string = (char*)"value1234567890\0";
+  
+  hp2 = hb->literalHeaderFieldWithIncrementalIndex(true, name_string, true,value_string);
+  int size_added = hb->addData(hp2);
+  delete(hp2);  
+
+  uint32_t new_size = 55;
+  hp1 = hb->dynamicTableSizeUpdate(new_size);
+  size_added = hb->addData(hp1);
+  delete(hp1);
+
+  hp3 = hb->indexedHeaderField(62);
+  size_added = hb->addData(hp3);
+  delete(hp3);
+  
+  hpd2 = hb->getNext();
+  delete(hpd2);
+  hpd1 = hb->getNext();
+  delete(hpd1);
+  hpd3 = hb->getNext(); 
+  HeaderPair* hpair = hb->getHeaderPair(hpd3);
+  delete(hpd3);
+  
+  assertEqual(name_string, hpair->name);
+  assertEqual(value_string, hpair->value);
+  delete(hpair);
+  
+  delete(hpack);
+  assertEqual(freeMemory(),initial_memory);      
+
+}
+
+
+
+test(DynamicTableSizeUpdateIncrease){
+  Serial.println(F("Test DynamicTableSizeUpdateIncrease"));
+  int initial_memory = freeMemory();
+  HPackData *hp1, *hp2, *hp3, *hpd1, *hpd2, *hpd3; 
+  uint32_t incomming_buffer_max_size = 100;
+  uint32_t max_table_size= 55;
+  HPack* hpack = new HPack(incomming_buffer_max_size, max_table_size);
+  HeaderBuffer *hb = hpack->hb;
+  char * name_string = (char*)"holasd\0";
+  char * value_string = (char*)"value1234567890\0";
+  
+  hp2 = hb->literalHeaderFieldWithIncrementalIndex(true, name_string, true,value_string);
+  int size_added = hb->addData(hp2);
+  delete(hp2);  
+
+  uint32_t new_size = 100;
+  hp1 = hb->dynamicTableSizeUpdate(new_size);
+  size_added = hb->addData(hp1);
+  delete(hp1);
+
+  hp3 = hb->indexedHeaderField(62);
+  size_added = hb->addData(hp3);
+  delete(hp3);
+  
+  hpd2 = hb->getNext();
+  delete(hpd2);
+  hpd1 = hb->getNext();
+  delete(hpd1);
+  hpd3 = hb->getNext(); 
+  HeaderPair* hpair = hb->getHeaderPair(hpd3);
+  delete(hpd3);
+  
+  assertEqual(name_string, hpair->name);
+  assertEqual(value_string, hpair->value);
+  delete(hpair);
+  
+  delete(hpack);
+  assertEqual(freeMemory(),initial_memory);      
+
+}
+
+
+test(DynamicTableSizeUpdateDecreaseDeletingEntry){
+  Serial.println(F("Test DynamicTableSizeUpdateIncrease"));
+  int initial_memory = freeMemory();
+  HPackData *hp1, *hp2, *hp3, *hpd1, *hpd2, *hpd3; 
+  uint32_t incomming_buffer_max_size = 100;
+  uint32_t max_table_size= 100;
+  HPack* hpack = new HPack(incomming_buffer_max_size, max_table_size);
+  HeaderBuffer *hb = hpack->hb;
+  char * name_string = (char*)"holasd\0";
+  char * value_string = (char*)"value1234567890\0";
+  
+  hp2 = hb->literalHeaderFieldWithIncrementalIndex(true, name_string, true,value_string);
+  int size_added = hb->addData(hp2);
+  delete(hp2);  
+
+  uint32_t new_size = 32;
+  hp1 = hb->dynamicTableSizeUpdate(new_size);
+  size_added = hb->addData(hp1);
+  delete(hp1);
+
+  /*hp3 = hb->indexedHeaderField(62);
+  size_added = hb->addData(hp3);
+  delete(hp3);
+  */
+  hpd2 = hb->getNext();
+  delete(hpd2);
+  hpd1 = hb->getNext();
+  delete(hpd1);
+  /*hpd3 = hb->getNext(); 
+  HeaderPair* hpair = hb->getHeaderPair(hpd3);
+  delete(hpd3);
+  
+  assertEqual(name_string, hpair->name);
+  assertEqual(value_string, hpair->value);
+  delete(hpair);
+  */
+
+  assertEqual(hb->dyn_table->length(),0);
+  
+  delete(hpack);
+  assertEqual(freeMemory(),initial_memory);      
+
+}
 
 
 /*test(ok){
