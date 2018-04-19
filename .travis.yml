@@ -19,18 +19,18 @@ before_install:
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
  # - git clone https://github.com/niclabs/HPack-ino.git #clonar repo Hpack, privado, ver como hacer.
   - cd HPack-ino
-  - mv HPack ~sketch/libraries #mover a librerias de usuario Arduino
-  - mv test ~sketch #mover folder de sketch de prueba libreria HPack
-install:
-  - arduino --install-library "HPack"
+  - locate sketchbook
+  #- mv HPack ~sketch/libraries #mover a librerias de usuario Arduino
+  #- mv test ~sketch #mover folder de sketch de prueba libreria HPack
+#install:
+  #- arduino --install-library "HPack"
 
 script:
 #verificaciones para placas.
-# - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
+ - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:mega:cpu=atmega1280 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
-# - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/
-  - arduino --verify --board arduino:avr:megaADK ~sketch/test/test2.ino
+#  - arduino --verify --board arduino:avr:megaADK ~sketch/test/test2.ino
 
 notifications:
   email:
