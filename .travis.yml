@@ -15,7 +15,7 @@ before_install:
   - sudo mv arduino-1.6.5 /usr/local/share/arduino
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
 #------------------------------Para usar libreria
-  - git@github.com:kelly97wagemann/https://github.com/niclabs/HPack-ino.git
+  - https://kelly97wagemann:341mufasa@github.com/kelly97wagemann/niclabs/HPack-ino.git
  # - git clone https://github.com/niclabs/HPack-ino.git #clonar repo Hpack, privado, ver como hacer.
   - cd HPack-ino
   - mv HPack ~/sketchbook/libraries/ #mover a librerias de usuario Arduino
