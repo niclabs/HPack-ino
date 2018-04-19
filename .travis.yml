@@ -2,8 +2,8 @@ language: c
 sudo: required #agilizar build
 env:
 #placas a utilizar
-  - board=arduino:avr:mega:cpu=atmega1280 
-  - board=arduino:avr:mega:cpu=atmega2560 
+  #- board=arduino:avr:mega:cpu=atmega1280 
+  #- board=arduino:avr:mega:cpu=atmega2560 
   - board=arduino:avr:megaADK
 before_install:
 #configuracion previa Arduino
