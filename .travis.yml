@@ -32,10 +32,7 @@ script:
 # - arduino --verify --board arduino:avr:mega:cpu=atmega1280 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/
   - arduino --verify --board arduino:avr:megaADK /usr/local/share/sketchbook/test/test2.ino
-  
-  
-  build_sketch "${SKETCHBOOK_FOLDER}/hardware/MicroCore/avr/libraries" "$BOARD_ID" "false" "all"
-+
+
 notifications:
   email:
     on_success: always
