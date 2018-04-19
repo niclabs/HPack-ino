@@ -5,8 +5,7 @@ env:
   #- board=arduino:avr:mega:cpu=atmega1280 
   #- board=arduino:avr:mega:cpu=atmega2560 
   - board=arduino:avr:megaADK
-   global:
-     - SKETCHBOOK_FOLDER="${HOME}/Arduino"
+  - sketch="${HOME}/Arduino"
 before_install:
 #configuracion previa Arduino
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
@@ -20,8 +19,8 @@ before_install:
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
  # - git clone https://github.com/niclabs/HPack-ino.git #clonar repo Hpack, privado, ver como hacer.
   - cd HPack-ino
-  - mv HPack $SKETCHBOOK_FOLDER/libraries #mover a librerias de usuario Arduino
-  - mv test $SKETCHBOOK_FOLDER #mover folder de sketch de prueba libreria HPack
+  - mv HPack ~sketch/libraries #mover a librerias de usuario Arduino
+  - mv test ~sketch #mover folder de sketch de prueba libreria HPack
 install:
   - arduino --install-library "HPack"
 
@@ -31,7 +30,7 @@ script:
 # - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:mega:cpu=atmega1280 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/
-  - arduino --verify --board arduino:avr:megaADK /usr/local/share/sketchbook/test/test2.ino
+  - arduino --verify --board arduino:avr:megaADK ~sketch/test/test2.ino
 
 notifications:
   email:
