@@ -5,7 +5,7 @@ env:
   #- board=arduino:avr:mega:cpu=atmega1280 
   #- board=arduino:avr:mega:cpu=atmega2560 
   - board=arduino:avr:megaADK
-  - sketch="${HOME}/Arduino"
+  #- sketch="${HOME}/Arduino"
 before_install:
 #configuracion previa Arduino
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
