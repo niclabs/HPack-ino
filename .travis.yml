@@ -28,6 +28,8 @@ before_install:
   - dir
   - cd HPack-ino
   - dir
+  - cd arduino-1.6.5-linux64.tar.xz
+  - dir
  # - readlink -f sketchbook
  # - readlink -f libraries
  # - readlink -f arduino
