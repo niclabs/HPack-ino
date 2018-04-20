@@ -23,20 +23,22 @@ before_install:
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
   #- SKETCH_LOCATION=/home/travis/build/niclabs/HPack-ino
   - cd ~/build/niclabs/HPack-ino #aqui esta lo de git, arduino folder y deberia estar sketchbook folder
-  - mkdir sketchbook
-  - cd sketchbook
-  - mkdir libraries
-  - cd ..
+  #- mkdir sketchbook
+  #- cd sketchbook
+  #- mkdir libraries
+  #- cd ..
   - ls
-  - cd test
-  - mv test2.ino ~/build/niclabs/HPack-ino/sketchbook
-  - cd ..
-  - mv HPack ~/build/niclabs/HPack-ino/arduino-1.6.5/libraries
+  - readlink -f Arduino
+  - readlink -f sketchbook
+  #- cd test
+  #- mv test2.ino ~/build/niclabs/HPack-ino/sketchbook
+  #- cd ..
+  #- mv HPack ~/build/niclabs/HPack-ino/arduino-1.6.5/libraries
 
   #- mv HPack cambiar desde ~/build/niclabs/HPack-ino/HPack-ino/ que es /home/travis/etc a sketchbook/libraries #libraries #mover a librerias de usuario Arduino
   #- mv test ~/build/niclabs/HPack-ino/HPack-ino/ mover de aqui a sketchbook #mover folder de sketch de prueba libreria HPack
 #install:
-  - arduino --install-library "HPack"
+  #- arduino --install-library "HPack"
 
 script:
 #verificaciones para placas.
