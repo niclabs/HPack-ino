@@ -34,6 +34,7 @@ before_install:
   - dir
   - readlink -f sketchbook
   - locate sketchbook
+  - locate libraries
  # - readlink -f sketchbook
  # - readlink -f libraries
  # - readlink -f arduino
