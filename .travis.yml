@@ -16,6 +16,7 @@ before_install:
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
   - tar -xf arduino-1.6.5-linux64.tar.xz #este comando funciona
   - cd arduino-1.6.5/
+  - pwd
   - ls
   #- tar xpvf arduino-1.6.5-linux64.tar.xz -C ~/build/niclabs/ este tb
 #  - sudo apt-get install arduino
