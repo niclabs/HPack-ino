@@ -17,23 +17,26 @@ before_install:
   - tar -xf arduino-1.6.5-linux64.tar.xz #este comando funciona
   - cd arduino-1.6.5/
   - pwd
-  - ls
+  #- ls
   #- tar xpvf arduino-1.6.5-linux64.tar.xz -C ~/build/niclabs/ este tb
 #  - sudo apt-get install arduino
   - sudo updatedb
 #------------------------------Para usar libreria
  #- /home/travis/build/niclabs/HPack-ino/HPack-ino/sketchbook
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
-  - cd HPack-ino
-  - ls
   - cd ~
-  - dir
-  - cd build
-  - dir
-  - cd niclabs
-  - dir
-  - cd HPack
-  - dir
+  #- SKETCH_LOCATION="$TRAVIS_BUILD_DIR"
+  - cd $TRAVIS_BUILD_DIR
+  #- cd HPack-ino
+  #- ls
+  #- cd ~
+  #- dir
+  #- cd build
+  #- dir
+  #- cd niclabs
+  #- dir
+  #- cd HPack
+  #- dir
   #- locate sketchbook
   #- locate libraries
  # - readlink -f sketchbook
