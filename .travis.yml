@@ -14,9 +14,10 @@ before_install:
   - tar xf arduino-1.6.5-linux64.tar.xz
   - sudo mv arduino-1.6.5 /usr/local/share/arduino
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
-  #- tar -xf arduino-1.6.5-linux64.tar.xz #este comando funciona
-  #- cd arduino-1.6.5/
-  - tar xpvf arduino-1.6.5-linux64.tar.xz -C ~/build/niclabs/
+  - tar -xf arduino-1.6.5-linux64.tar.xz #este comando funciona
+  - cd arduino-1.6.5/
+  - ls
+  #- tar xpvf arduino-1.6.5-linux64.tar.xz -C ~/build/niclabs/ este tb
 #  - sudo apt-get install arduino
   - sudo updatedb
 #------------------------------Para usar libreria
@@ -30,10 +31,6 @@ before_install:
   - dir
   - cd niclabs
   - dir
-  - cd arduino-1.6.5 
-  - dir
-  - readlink -f sketchbook
-  - cd sketchbook
   #- locate sketchbook
   #- locate libraries
  # - readlink -f sketchbook
