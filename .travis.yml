@@ -20,7 +20,7 @@ before_install:
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
   - cd HPack-ino
   - ls
-  - cd ~/bin/
+  - cd ~/bin/sketchbook
   - ls
  # - readlink -f sketchbook
  # - readlink -f libraries
