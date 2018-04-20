@@ -19,7 +19,7 @@ before_install:
  #- /home/travis/build/niclabs/HPack-ino/HPack-ino/sketchbook
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
   - cd HPack-ino
-  - cd sketchbook
+  - cd /sketchbook/
   - ls
   - readlink -f sketchbook
   - readlink -f libraries
