@@ -15,7 +15,7 @@ before_install:
   - tar xf arduino-1.6.5-linux64.tar.xz
   - sudo mv arduino-1.6.5 /usr/local/share/arduino
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
-  - sudo uptadedb
+  - sudo updatedb
 #------------------------------Para usar libreria
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
  # - git clone https://github.com/niclabs/HPack-ino.git #clonar repo Hpack, privado, ver como hacer.
