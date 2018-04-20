@@ -22,6 +22,9 @@ before_install:
  #- /home/travis/build/niclabs/HPack-ino/HPack-ino/sketchbook
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
   #- SKETCH_LOCATION=/home/travis/build/niclabs/HPack-ino
+  - cd ~/build/niclabs
+  - dir
+  - cd HPack-ino
   - ls
   - pwd
   #- mv HPack cambiar desde ~/build/niclabs/HPack-ino/HPack-ino/ que es /home/travis/etc a sketchbook/libraries #libraries #mover a librerias de usuario Arduino
