@@ -21,7 +21,9 @@ before_install:
   - cd HPack-ino
   - readlink -f sketchbook
   - readlink -f libraries
-  - mv HPack ~/build/niclabs/HPack-ino/HPack-ino/sketchbook/  #libraries #mover a librerias de usuario Arduino
+  - cd ~/build/niclabs/HPack-ino/HPack-ino/sketchbook/ 
+  - ls
+  #- mv HPack ~/build/niclabs/HPack-ino/HPack-ino/sketchbook/  #libraries #mover a librerias de usuario Arduino
   #- mv test ~/build/niclabs/HPack-ino/HPack-ino/sketchbook #mover folder de sketch de prueba libreria HPack
 #install:
   #- arduino --install-library "HPack"
