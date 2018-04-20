@@ -28,8 +28,8 @@ before_install:
   #- mkdir libraries
   #- cd ..
   - ls
-  - sketch1=$(readlink -f $Arduino)
-  - sketch2=$(readlink -f $sketchbook)
+  - sketch1=$(readlink -f Arduino)
+  - sketch2=$(readlink -f sketchbook)
   #- cd test
   - mv HPack sketch1
   - mv HPack sketch2
