@@ -20,6 +20,7 @@ before_install:
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
   - cd HPack-ino
   - readlink -f sketchbook
+  - readlink -f libraries
   - mv HPack ~/build/niclabs/HPack-ino/HPack-ino/sketchbook/  #libraries #mover a librerias de usuario Arduino
   #- mv test ~/build/niclabs/HPack-ino/HPack-ino/sketchbook #mover folder de sketch de prueba libreria HPack
 #install:
