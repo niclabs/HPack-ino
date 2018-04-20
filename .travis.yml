@@ -35,7 +35,7 @@ before_install:
   #- mv HPack cambiar desde ~/build/niclabs/HPack-ino/HPack-ino/ que es /home/travis/etc a sketchbook/libraries #libraries #mover a librerias de usuario Arduino
   #- mv test ~/build/niclabs/HPack-ino/HPack-ino/ mover de aqui a sketchbook #mover folder de sketch de prueba libreria HPack
 #install:
-  #- arduino --install-library "HPack"
+  - arduino --install-library "HPack"
 
 script:
 #verificaciones para placas.
