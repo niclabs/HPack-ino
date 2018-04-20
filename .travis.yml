@@ -30,7 +30,7 @@ before_install:
   - dir
   - cd niclabs
   - dir
-  - cd HPack-ino
+  - cd arduino-1.6.5 
   - dir
  # - readlink -f sketchbook
  # - readlink -f libraries
