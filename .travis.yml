@@ -32,6 +32,8 @@ before_install:
   - dir
   - cd niclabs
   - dir
+  - cd HPack
+  - dir
   #- locate sketchbook
   #- locate libraries
  # - readlink -f sketchbook
