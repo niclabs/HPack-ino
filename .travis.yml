@@ -28,11 +28,11 @@ before_install:
   #- mkdir libraries
   #- cd ..
   - ls
-  - sketch1=$(readlink -f Arduino)
-  - sketch2=$(readlink -f sketchbook)
+  #- sketch1=$(readlink -f Arduino)
+  #- sketch2=$(readlink -f sketchbook)
   #- cd test
-  - mv HPack sketch1
-  - mv HPack sketch2
+  - mv HPack home/travis/build/niclabs/HPack-ino/Arduino
+  - mv HPack home/travis/build/niclabs/HPack-ino/Arduino
   #- mv test2.ino ~/build/niclabs/HPack-ino/sketchbook
   #- cd ..
   #- mv HPack ~/build/niclabs/HPack-ino//libraries
