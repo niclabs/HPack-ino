@@ -32,6 +32,7 @@ before_install:
   - dir
   - cd arduino-1.6.5 
   - dir
+  - readlink -f sketchbook
  # - readlink -f sketchbook
  # - readlink -f libraries
  # - readlink -f arduino
