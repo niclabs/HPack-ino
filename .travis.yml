@@ -5,7 +5,7 @@ env:
   #- board=arduino:avr:mega:cpu=atmega1280 
   #- board=arduino:avr:mega:cpu=atmega2560 
   - board=arduino:avr:megaADK
-  - sketch="${HOME}/Arduino"
+  #- sketch="${HOME}/Arduino"
 before_install:
 #configuracion previa Arduino
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
@@ -15,12 +15,14 @@ before_install:
   - tar xf arduino-1.6.5-linux64.tar.xz
   - sudo mv arduino-1.6.5 /usr/local/share/arduino
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
+  - sudo uptadedb
 #------------------------------Para usar libreria
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
  # - git clone https://github.com/niclabs/HPack-ino.git #clonar repo Hpack, privado, ver como hacer.
-  - cd HPack-ino
-  - mv HPack ~/sketch/libraries #mover a librerias de usuario Arduino
-  - mv test ~/sketch/ #mover folder de sketch de prueba libreria HPack
+  - locate sketchbook/
+  #- cd HPack-ino
+  #- mv HPack ~/sketch/libraries #mover a librerias de usuario Arduino
+  #- mv test ~/sketch/ #mover folder de sketch de prueba libreria HPack
 #install:
   #- arduino --install-library "HPack"
 
@@ -33,5 +35,5 @@ script:
 
 notifications:
   email:
-    on_success: always
-    on_failure: always #always/change/never
+    on_success: never
+    on_failure: never #always/change/never
