@@ -20,12 +20,14 @@ before_install:
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
   - cd HPack-ino
   - ls
-  - readlink -f sketchbook
-  - readlink -f libraries
-  - readlink -f arduino
+  - cd ~
+  - ls
+ # - readlink -f sketchbook
+ # - readlink -f libraries
+ # - readlink -f arduino
   - pwd
-  #- mv HPack ~/build/niclabs/HPack-ino/HPack-ino/sketchbook/  #libraries #mover a librerias de usuario Arduino
-  #- mv test ~/build/niclabs/HPack-ino/HPack-ino/sketchbook #mover folder de sketch de prueba libreria HPack
+  #- mv HPack cambiar desde ~/build/niclabs/HPack-ino/HPack-ino/ que es /home/travis/etc a sketchbook/libraries #libraries #mover a librerias de usuario Arduino
+  #- mv test ~/build/niclabs/HPack-ino/HPack-ino/ mover de aqui a sketchbook #mover folder de sketch de prueba libreria HPack
 #install:
   #- arduino --install-library "HPack"
 
@@ -34,6 +36,7 @@ script:
  - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:mega:cpu=atmega1280 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
+# /home/travis/build/niclabs/HPack-ino/HPack-ino/test/test2.ino path donde esta por ahora
 #  - arduino --verify --board arduino:avr:megaADK ~sketch/test/test2.ino
 
 notifications:
