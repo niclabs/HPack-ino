@@ -20,7 +20,11 @@ before_install:
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
   - cd HPack-ino
   - ls
-  - cd ~/build
+  - cd ~
+  - dir
+  - cd build
+  - dir
+  - cd niclabs
   - dir
  # - readlink -f sketchbook
  # - readlink -f libraries
