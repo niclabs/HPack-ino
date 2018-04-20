@@ -18,11 +18,9 @@ before_install:
   - sudo updatedb
 #------------------------------Para usar libreria
   - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
- # - git clone https://github.com/niclabs/HPack-ino.git #clonar repo Hpack, privado, ver como hacer.
-  - locate sketchbook/
-  #- cd HPack-ino
-  #- mv HPack ~/sketch/libraries #mover a librerias de usuario Arduino
-  #- mv test ~/sketch/ #mover folder de sketch de prueba libreria HPack
+  - cd HPack-ino
+  - mv HPack ~/usr/sketch/libraries #mover a librerias de usuario Arduino
+  - mv test ~/usr/sketch/ #mover folder de sketch de prueba libreria HPack
 #install:
   #- arduino --install-library "HPack"
 
