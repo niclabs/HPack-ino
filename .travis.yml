@@ -28,7 +28,6 @@ before_install:
   #- mkdir libraries
   #- cd ..
   - ls
-<<<<<<< HEAD
   - cd ~
   - find . -name sketchbook
  # - dir
@@ -42,17 +41,13 @@ before_install:
  # - readlink -f libraries
  # - readlink -f arduino
   - pwd
-=======
   #- sketch1=$(readlink -f Arduino)
   #- sketch2=$(readlink -f sketchbook)
   #- cd test
-  - mv HPack home/travis/build/niclabs/HPack-ino/Arduino
-  - mv HPack home/travis/build/niclabs/HPack-ino/Arduino
   #- mv test2.ino ~/build/niclabs/HPack-ino/sketchbook
   #- cd ..
   #- mv HPack ~/build/niclabs/HPack-ino//libraries
 
->>>>>>> 8e744878e6c9f88e08c431a4627be8bbf721e3d8
   #- mv HPack cambiar desde ~/build/niclabs/HPack-ino/HPack-ino/ que es /home/travis/etc a sketchbook/libraries #libraries #mover a librerias de usuario Arduino
   #- mv test ~/build/niclabs/HPack-ino/HPack-ino/ mover de aqui a sketchbook #mover folder de sketch de prueba libreria HPack
 #install:
