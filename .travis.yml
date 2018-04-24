@@ -20,15 +20,16 @@ before_install:
   - sudo updatedb
 #----------------------------Para usar libreria
  #- /home/travis/build/niclabs/HPack-ino/HPack-ino/
-  - git clone --depth=50 --branch=master git@github.com:niclabs/HPack-ino.git HPack-ino
-  - cd ~/build/niclabs/HPack-ino #aqui esta lo de git.
+  - git clone https://github.com/niclabs/HPack-ino
+  #- cd ~/build/niclabs/HPack-ino #aqui esta lo de git.
   #- mkdir sketchbook
   #- cd sketchbook
   #- mkdir libraries
   #- cd ..
-  - ls
+  #- ls
   - cd ~
   - find . -name sketchbook
+  - find . -name HPack-ino
  # - dir
  # - cd build
  # - dir
