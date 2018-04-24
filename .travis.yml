@@ -25,13 +25,14 @@ before_install:
   - cd HPack-ino
   - ls
   - cd ~
-  - dir
-  - cd build
-  - dir
-  - cd niclabs
-  - dir
-  - cd arduino-1.6.5 
-  - dir
+  - find . -name sketchbook
+ # - dir
+ # - cd build
+ # - dir
+ # - cd niclabs
+ # - dir
+ # - cd arduino-1.6.5 
+ # - dir
  # - readlink -f sketchbook
  # - readlink -f libraries
  # - readlink -f arduino
