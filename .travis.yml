@@ -20,6 +20,7 @@ before_install:
   - sudo updatedb
 #----------------------------Para usar libreria
  #- /home/travis/build/niclabs/HPack-ino/HPack-ino/
+  - cd ..
   - git clone https://github.com/niclabs/HPack-ino
   #- cd ~/build/niclabs/HPack-ino #aqui esta lo de git.
   #- mkdir sketchbook
@@ -28,7 +29,7 @@ before_install:
   #- cd ..
   #- ls
   - cd ~
-  - find . -name sketchbook
+  - find . -name preferences.txt
   - find . -name HPack-ino
  # - dir
  # - cd build
