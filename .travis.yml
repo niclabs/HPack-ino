@@ -17,7 +17,7 @@ before_install:
   - tar -xf arduino-1.6.5-linux64.tar.xz 
   - cd arduino-1.6.5/
   - pwd
-  - sudo updatedb
+  #- sudo updatedb
 #----------------------------Para usar libreria
  #- sketchbook.path= ~/build/niclabs/HPack-ino
 # You have to first tell the IDE where to find the library
@@ -31,18 +31,19 @@ before_install:
   #- ls
   #- cd ~
   #- find . -name preferences.txt # lo deje en HPack-ino, ese hay que reemplazarlo por el de arduino
-  - cd arduino-1.6.5/
-  - cd lib
-  - rm -r preferences.txt
-  - cd .. 
-  - cd ..
-  - mkdir sketchbook
-  - cd sketchbook #estoy en sketchbook
-  - mkdir libraries
-  - cd ..
-  - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
-  - mv test ~/build/niclabs/HPack-ino/sketchbook
-  - mv HPack ~/build/niclabs/HPack-ino/sketchbook/libraries
+  #- cd arduino-1.6.5/
+  #- cd lib
+  #- rm -r preferences.txt
+  #- cd .. 
+  #- cd ..
+  #- mkdir sketchbook
+  #- cd sketchbook #estoy en sketchbook
+  #- mkdir libraries
+  #- cd ..
+  #- mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
+  #- mv test ~/build/niclabs/HPack-ino/sketchbook
+  #- mv HPack ~/build/niclabs/HPack-ino/sketchbook/libraries
+  - mv HPack ~/build/niclabs/HPack-ino/arduino-1.6.5/libraries
   #- cd ..
   #- mv HPack ~/build/niclabs/HPack-ino/libraries
 install:
