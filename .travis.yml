@@ -20,6 +20,7 @@ before_install:
   - sudo updatedb
 #----------------------------Para usar libreria
  #- sketchbook.path= ~/build/niclabs/HPack-ino
+# You have to first tell the IDE where to find the library
   - cd ..
   - git clone https://github.com/niclabs/HPack-ino
   #- cd ~/build/niclabs/HPack-ino #aqui esta lo de git.
@@ -35,20 +36,17 @@ before_install:
   - rm -r preferences.txt
   - cd .. 
   - cd ..
-  - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
-  #- cd arduino-1.6.5/lib
-  #- cat preferences.txt esta cambiado
-  - pwd
   - mkdir sketchbook
   - cd sketchbook #estoy en sketchbook
   - mkdir libraries
   - cd ..
+  - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
   - mv test ~/build/niclabs/HPack-ino/sketchbook
   - mv HPack ~/build/niclabs/HPack-ino/sketchbook/libraries
   #- cd ..
   #- mv HPack ~/build/niclabs/HPack-ino/libraries
 install:
-  - arduino --install-library "HPack" 
+  - arduino --install-library HPack 
 
 script:
 #verificaciones para placas.
