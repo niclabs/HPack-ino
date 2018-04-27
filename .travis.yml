@@ -30,6 +30,7 @@ before_install:
   #- ls
   - cd ~
   - find . -name preferences.txt
+  - find . -name sketchbook
   - find . -name HPack-ino
  # - dir
  # - cd build
