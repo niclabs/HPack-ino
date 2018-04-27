@@ -19,7 +19,7 @@ before_install:
   - pwd
   - sudo updatedb
 #----------------------------Para usar libreria
- #- /home/travis/build/niclabs/HPack-ino/HPack-ino/
+ #- sketchbook.path= ~/build/niclabs/HPack-ino
   - cd ..
   - git clone https://github.com/niclabs/HPack-ino
   #- cd ~/build/niclabs/HPack-ino #aqui esta lo de git.
@@ -29,16 +29,17 @@ before_install:
   #- cd ..
   #- ls
   #- cd ~
-  - find . -name preferences.txt # lo deje en HPack-ino, ese hay que reemplazarlo por el de arduino
+  #- find . -name preferences.txt # lo deje en HPack-ino, ese hay que reemplazarlo por el de arduino
   - cd arduino-1.6.5/
   - cd lib
   - rm -r preferences.txt
   - cd .. 
   - cd ..
   - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
-  - cd arduino-1.6.5/lib
-  - cat preferences.txt
-  #- pwd
+  #- cd arduino-1.6.5/lib
+  #- cat preferences.txt
+  - pwd
+  - ls
   #- cd test
   #- mv test2.ino ~/build/niclabs/HPack-ino/sketchbook
   #- cd ..
