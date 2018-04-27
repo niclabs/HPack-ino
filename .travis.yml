@@ -40,9 +40,8 @@ before_install:
   #- cat preferences.txt esta cambiado
   - pwd
   - mkdir sketchbook
-  - cd sketchbook
+  - cd sketchbook #estoy en sketchbook
   - mkdir libraries
-  - cd ..
   - cd ..
   - mv test ~/build/niclabs/HPack-ino/sketchbook
   - mv HPack ~/build/niclabs/HPack-ino/sketchbook/libraries
