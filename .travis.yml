@@ -34,7 +34,7 @@ before_install:
   - cd lib
   - rm -r preferences.txt
   - cd .. 
-  - cd..
+  - cd ..
   - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
   #- cat preferences.txt
   - pwd
