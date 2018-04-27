@@ -30,8 +30,10 @@ before_install:
   #- ls
   - cd ~
   - find . -name preferences.txt
-  - find . -name sketchbook
-  - find . -name HPack-ino
+  - cd /build/niclabs/HPack-ino/arduino-1.6.5/lib
+  - gedit preferences.txt
+  #- find . -name sketchbook---> no esta creado folder
+  #- find . -name HPack-ino
  # - dir
  # - cd build
  # - dir
