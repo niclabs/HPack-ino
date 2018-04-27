@@ -37,15 +37,19 @@ before_install:
   - cd ..
   - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
   #- cd arduino-1.6.5/lib
-  #- cat preferences.txt
+  #- cat preferences.txt esta cambiado
   - pwd
-  - ls
-  #- cd test
-  #- mv test2.ino ~/build/niclabs/HPack-ino/sketchbook
+  - mkdir sketchbook
+  - cd sketchbook
+  - mkdir libraries
+  - cd ..
+  - cd ..
+  - mv test ~/build/niclabs/HPack-ino/sketchbook
+  - mv HPack ~/build/niclabs/HPack-ino/sketchbook/libraries
   #- cd ..
   #- mv HPack ~/build/niclabs/HPack-ino/libraries
-#install:
-  #- arduino --install-library "HPack" 
+install:
+  - arduino --install-library "HPack" 
 
 script:
 #verificaciones para placas.
