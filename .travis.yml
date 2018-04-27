@@ -29,24 +29,10 @@ before_install:
   #- cd ..
   #- ls
   #- cd ~
-  - find . -name preferences.txt
-  - cd arduino-1.6.5/
-  - cd lib
-  - nano preferences.txt
-  #- cd niclabs/HPack-ino/arduino-1.6.5/lib
- # - gedit preferences.txt
-  #- find . -name sketchbook---> no esta creado folder 
-  #- find . -name HPack-ino 
- # - dir
- # - cd build
- # - dir
- # - cd niclabs
- # - dir
- # - cd arduino-1.6.5 
- # - dir
- # - readlink -f sketchbook
- # - readlink -f libraries
- # - readlink -f arduino
+  - find . -name preferences.txt # lo deje en HPack-ino, ese hay que reemplazarlo por el de arduino
+ # - cd arduino-1.6.5/
+ # - cd lib
+  - cat preferences.txt
   - pwd
   #- cd test
   #- mv test2.ino ~/build/niclabs/HPack-ino/sketchbook
