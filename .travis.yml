@@ -48,7 +48,7 @@ before_install:
   #- cd ..
   #- mv HPack ~/build/niclabs/HPack-ino/libraries
 install:
-  - arduino --install-library "HPack" 
+  - arduino --install-library HPack 
 
 script:
 #verificaciones para placas.
