@@ -34,15 +34,7 @@ before_install:
   - cd ..
   - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
   - mv test ~/build/niclabs/HPack-ino/sketchbook
-  - cd HPack #estoy en hpack, mover todo su contenido al folder del test
-  - mv HPack.cpp ~/build/niclabs/HPack-ino/sketchbook
-  - mv HPack.h ~/build/niclabs/HPack-ino/sketchbook
-  - mv HuffmanCodec.cpp ~/build/niclabs/HPack-ino/sketchbook
-  - mv HuffmanCodec.h ~/build/niclabs/HPack-ino/sketchbook
-  - mv HuffmanTree.cpp ~/build/niclabs/HPack-ino/sketchbook
-  - mv HuffmanTree.h ~/build/niclabs/HPack-ino/sketchbook
-  - mv huffmanCode.csv ~/build/niclabs/HPack-ino/sketchbook
-  - cd ..
+  #estoy en hpack, mover todo su contenido al folder del test
   #- mv HPack ~/build/niclabs/HPack-ino/arduino-1.6.5/libraries #libraries
 install:
    - arduino --install-library "ArduinoUnit"
@@ -52,7 +44,7 @@ script:
 # - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:mega:cpu=atmega1280 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # /home/travis/build/niclabs/HPack-ino/sketchbook/test/test2.ino path donde esta por ahora
- - arduino --verify --board arduino:avr:megaADK ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
+# - arduino --verify --board arduino:avr:megaADK ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
 
 notifications:
   email:
