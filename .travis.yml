@@ -35,7 +35,8 @@ before_install:
   - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
   - mv test ~/build/niclabs/HPack-ino/sketchbook
   - mv HPack ~/build/niclabs/HPack-ino/sketchbook/libraries
-
+install:
+   - arduino --install-library "ArduinoUnit"
 script:
 #verificaciones para placas.
  - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
