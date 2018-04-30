@@ -23,10 +23,6 @@ before_install:
   - cd ..
   - git clone https://github.com/niclabs/HPack-ino
   - mkdir sketchbook
-  - cd sketchbook
-  - mkdir libraries
-  - cd ..
-  #- find . -name preferences.txt # lo deje en HPack-ino, ese hay que reemplazarlo por el de arduino
   - cd arduino-1.6.5/
   - cd lib
   - rm -r preferences.txt
@@ -34,7 +30,11 @@ before_install:
   - cd ..
   - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
   - mv test ~/build/niclabs/HPack-ino/sketchbook
-  - mv HPack ~/build/niclabs/HPack-ino/arduino-1.6.5/libraries #libraries
+  - cd sketchbook/test
+  - mkdir src
+  - cd ..
+  - cd ..
+  - mv HPack ~/build/niclabs/HPack-ino/sketchbook/test/src #libraries
 install:
    - arduino --install-library "ArduinoUnit"
 script:
