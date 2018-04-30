@@ -34,7 +34,7 @@ before_install:
   - mkdir src
   - cd ..
   - cd ..
-  - mv HPack ~/build/niclabs/HPack-ino/sketchbook/test/src #libraries
+  - mv HPack ~/build/niclabs/HPack-ino/sketchbook/test/src 
 install:
    - arduino --install-library "ArduinoUnit"
 script:
