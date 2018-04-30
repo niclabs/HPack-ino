@@ -1,6 +1,6 @@
 #line 2 "test.ino"
 #include <ArduinoUnit.h>
-#include "src/HPack/HPack.h"
+#include "HPack.h"
 
 /*
 test(EncodeDecodeInteger){
