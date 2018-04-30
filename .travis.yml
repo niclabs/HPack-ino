@@ -30,11 +30,28 @@ before_install:
   - cd ..
   - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
   - mv test ~/build/niclabs/HPack-ino/sketchbook
-  - cd sketchbook/test
-  - mkdir src
-  - cd ..
-  - cd ..
-  - mv HPack ~/build/niclabs/HPack-ino/sketchbook/test/src 
+  - cd HPack
+#opcion 1: todo suelto en sketchbook
+#  - mv HPack.h ~/build/niclabs/HPack-ino/sketchbook/
+#  - mv HPack.cpp ~/build/niclabs/HPack-ino/sketchbook/
+#  - mv HuffmanTree.h ~/build/niclabs/HPack-ino/sketchbook/
+#  - mv HuffmanTree.cpp ~/build/niclabs/HPack-ino/sketchbook/
+#  - mv HuffmanCodec.h ~/build/niclabs/HPack-ino/sketchbook/
+#  - mv HuffmanCodec.cpp ~/build/niclabs/HPack-ino/sketchbook/
+#  - mv huffmanCode.csv ~/build/niclabs/HPack-ino/sketchbook/
+#opcion 2: todo suelto en test
+  - mv HPack.h ~/build/niclabs/HPack-ino/sketchbook/test
+  - mv HPack.cpp ~/build/niclabs/HPack-ino/sketchbook/test
+  - mv HuffmanTree.h ~/build/niclabs/HPack-ino/sketchbook/test
+  - mv HuffmanTree.cpp ~/build/niclabs/HPack-ino/sketchbook/test
+  - mv HuffmanCodec.h ~/build/niclabs/HPack-ino/sketchbook/test
+  - mv HuffmanCodec.cpp ~/build/niclabs/HPack-ino/sketchbook/test
+  - mv huffmanCode.csv ~/build/niclabs/HPack-ino/sketchbook/test
+##---Contenido de HPack---
+#HPack.cpp  HuffmanCodec.cpp  huffmanCode.csv  HuffmanTree.h
+#HPack.h    HuffmanCodec.h    HuffmanTree.cpp
+##------------------------
+
 install:
    - arduino --install-library "ArduinoUnit"
 script:
