@@ -1,5 +1,5 @@
 language: c
-sudo: required #agilizar build
+sudo: required #agilizar build.
 env:
 #placas a utilizar.
   #- board=arduino:avr:mega:cpu=atmega1280 
