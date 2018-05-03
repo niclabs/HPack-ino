@@ -892,7 +892,7 @@ HPackData* HeaderBuffer::getNext(){
 	
 	if(buf_size==availableBufSize()){
 		Serial.println(F("no more octets..."));
-		return nullptr;
+		return NULL;
 	}
 
 	byte first_octet = buf[first];
@@ -902,11 +902,11 @@ HPackData* HeaderBuffer::getNext(){
 		uint32_t index = decodeInteger(first,7);
 		if(index==-1){
 			Serial.println(F("indexedHeaderField: error no next"));
-			return nullptr;
+			return NULL;
 		}
 		if(index ==0){
 			Serial.println(F("no indexedHeaderField: index 0"));
-			return nullptr;
+			return NULL;
 		}
 		uint32_t octets_length = getOctetsLength(index,7);
 		increaseFirst(octets_length); //Check if actualize this here or not...
@@ -926,7 +926,7 @@ HPackData* HeaderBuffer::getNext(){
 				Serial.println(maxSize);
 			if(maxSize==-1){
 				Serial.println(F("dynamicTableSizeUpdate: error no next"));
-				return nullptr;
+				return NULL;
 			}
 			uint32_t octets_length = getOctetsLength(maxSize,5);
 			first = (first+octets_length)%buf_size;
@@ -945,7 +945,7 @@ HPackData* HeaderBuffer::getNext(){
 		uint32_t index = decodeInteger(first,prefix);
 		if(index==-1){
 			Serial.println(F("literalHeaderFieldWithIncrementalIndex: error no next"));
-			return nullptr;
+			return NULL;
 		}
 		uint32_t index_octets_length = getOctetsLength(index,prefix);
 		uint32_t pointer = index_octets_length;
@@ -1015,7 +1015,7 @@ HeaderPair* HeaderBuffer::findEntry(uint32_t index){
 
 HeaderPair* HeaderBuffer::getHeaderPair(HPackData* hpd){
 	if(hpd->get_preamble()&(uint8_t)32){
-		return nullptr;
+		return NULL;
 	}else{
 		if(!(hpd->get_preamble()&(uint8_t)128)){
 			if(hpd->get_index()!=(uint32_t)0){
