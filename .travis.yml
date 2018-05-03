@@ -46,6 +46,7 @@ before_install:
 
 install:
    - arduino --install-library "ArduinoUnit"
+   - arduino --install-library "Arduino"
 script:
 #verificaciones para placas.
  - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
