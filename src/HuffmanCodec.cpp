@@ -89,9 +89,9 @@ char * HuffmanCodec::decodeBytes(uint8_t* word, uint32_t length){
 		//Serial.println(word[j],BIN);
 	//}
 	//Serial.print(F("decoding Bytes: "));
-	while((bit/8)<length){
+	while((bit/8)<=length){
 		HuffmanSymbolCode* c = decodeByte(word, length, bit);
-		if(c==nullptr){
+		if(c==NULL){
 			//Serial.println();
 			i++;
 			break;
@@ -144,8 +144,8 @@ HuffmanEncodedWord* HuffmanCodec::encodeWord(char* word){
 HuffmanSymbolCode* HuffmanCodec::decodeByte(uint8_t* word, uint32_t length, uint32_t bit){
 	//Serial.println("HuffmanCodec::decodeByte");
 	if(bit/8>=length){
-		//Serial.println(F("nullptr"));
-		return nullptr;
+		//Serial.println(F("NULL"));
+		return NULL;
 	}
 	return tree->searchBit(word,length,bit);
 };
