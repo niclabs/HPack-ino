@@ -36,8 +36,8 @@ public:
 	Node* getLeft();
 	Node* getRight();
 private:
-	Node* left=nullptr;
-	Node* right=nullptr;
+	Node* left=NULL;
+	Node* right=NULL;
 };
 
 class HuffmanTree{
