@@ -84,7 +84,7 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 	//Serial.println("InternalNode::search");
 		if(encoded[0]=='\0'){
 	//		Serial.println(F("encoded fin"));
-			return nullptr;
+			return NULL;
 		}
 		char* rest = encoded+1;
 		if(encoded[0]=='0'){
@@ -92,7 +92,7 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 		}else if(encoded[0]=='1'){
 			return right->search(rest);
 		}else{
-			return nullptr;
+			return NULL;
 		}
 	};
 
@@ -101,7 +101,7 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 		uint32_t aux = bit/8;
 		uint32_t aux_bit = bit%8;
 		if(aux>=length){
-			return nullptr;
+			return NULL;
 		}
 		/*Serial.print(word[aux],BIN);
 		Serial.print("\t|");
@@ -129,7 +129,7 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 			if(code & 0x80000000){//bit = 1
 				//Serial.println("bit 1");
 				//delay(1000);
-				if(this->right==nullptr){
+				if(this->right==NULL){
 					//Serial.println("new internal node");
 					this->right = new InternalNode();
 				}else{
@@ -159,7 +159,7 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 				}
 				else{
 	//				Serial.println(F("wtf right leaf already created??"));
-					return nullptr;
+					return NULL;
 				}
 			}else{
 			//	Serial.println("bit 0");
@@ -170,9 +170,9 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 				}
 				else{
 	//				Serial.println(F("wtf left leaf already created??"));
-					return nullptr;
+					return NULL;
 				}
 			}
 		}
-		//return nullptr;
+		//return NULL;
 	};
