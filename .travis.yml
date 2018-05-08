@@ -3,8 +3,8 @@ sudo: required #agilizar build.
 env:
 #placas a utilizar.
   #- board=arduino:avr:mega:cpu=atmega1280 
-  #- board=arduino:avr:mega:cpu=atmega2560 
-  - board=arduino:avr:megaADK
+  - board=arduino:avr:mega:cpu=atmega2560 
+  #- board=arduino:avr:megaADK
 before_install:
 #configuracion previa Arduin
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
@@ -48,11 +48,11 @@ install:
    - arduino --install-library "ArduinoUnit"
 script:
 #verificaciones para placas.
- - arduino --verify --board arduino:avr:megaADK /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
+ - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # - arduino --verify --board arduino:avr:mega:cpu=atmega1280 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
 # /home/travis/build/niclabs/HPack-ino/sketchbook/test/test2.ino path donde esta por ahora.
- - arduino --verify --board arduino:avr:megaADK ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
+ - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
 
 notifications:
   email:
