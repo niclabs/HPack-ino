@@ -2,6 +2,7 @@
 
 
 
+
 char* byteToBits(byte b);
 uint32_t getOctetsLength(uint32_t I, uint8_t prefix);
 
@@ -135,6 +136,11 @@ public:
 
 	uint32_t decodeInteger(uint32_t pointer, uint8_t prefix);
 	char* decodeString(uint32_t pointer, bool huffman, uint32_t size);
+	uint32_t getBufSize();
+	uint32_t getFirst();
+	void indexData(HPackData* data);
+	EncodedData* createHeaderBlock(HPackData** hp_datas, uint32_t size);
+	uint32_t receiveHeaderBlock(byte* header_block, uint32_t size);
 private:
 	HeaderPair* findEntry(uint32_t index);
 	uint32_t buf_size;

@@ -98,8 +98,12 @@ static void HPackDynamicTable::operator delete(void *ptr){
 uint32_t HPackDynamicTable::size(){
 	uint32_t total_size = 0;
 	uint32_t table_length_used = this->length();
-	for(uint32_t i = first; i < table_length_used; i++){
-		total_size += table[i % table_length]->size() + 32;
+	//Serial.print(F("table length used: "));
+	//Serial.println(table_length_used);
+	//Serial.print(F("table first: "));
+	//Serial.println(first);
+	for(uint32_t i=0; i < table_length_used; i++){
+		total_size += table[(i+first)%table_length]->size() + 32;
 	}
 	return total_size;
 };
@@ -123,16 +127,21 @@ bool HPackDynamicTable::addEntry(HeaderPair* entry){
 		Serial.println(F("entry exceeds size of table"));
 		return false;
 	}
+	Serial.print(F("current dyn table size"));
+	Serial.println(this->size());
 	while(entry_size + this->size() > max_size){//if not available space...	
 		//delete "first" entry
 		Serial.println(F("delete 'first' entry, not enough space..."));
 		deleteEntry(first);
 		first = (first + 1) % table_length;
 	}
-	Serial.print(F("added:"));
+	Serial.print(F("added in "));
+	Serial.println(next);
 	entry->toString();
 	table[next] = entry;//->duplicateHeaderPair();
 	next = (next + 1) % table_length;
+	Serial.print(F("current dyn table size after addition"));
+	Serial.println(this->size());
 	return true;
 };
 
@@ -232,11 +241,11 @@ static void HPackData::operator delete(void *ptr) {
 	if(preamble!=(uint8_t)32 && preamble!=(uint8_t)128 ){
 		uint32_t index = ((HPackData*)ptr)->index;
 		if(index==0){
-			Serial.println(F("Deleting name"));
+			//Serial.println(F("Deleting name"));
 			::operator delete[](((HPackData*)ptr)->name_string);
 			//Serial.println(F("Deleted name"));
 		}
-		Serial.println(F("Deleting value"));
+		//Serial.println(F("Deleting value"));
 		::operator delete[](((HPackData*)ptr)->value_string);
 		//Serial.println(F("Deleted value"));
 		
@@ -609,8 +618,97 @@ uint32_t HeaderBuffer::availableBufSize(){
 	return availableSize;
 };
 
+EncodedData* HeaderBuffer::createHeaderBlock(HPackData** hp_datas, uint32_t size){
+	Serial.println(F("----createHeaderBlock"));
+	//first creat buffer big enough (then resize)
+	byte* block_buffer = new byte[buf_size];
+	int size_available = buf_size;
+	int index_block = 0;
+	for(int i =0; i< size; i++){
+		HPackData* hp_data = (HPackData*)(hp_datas[i]);
+		EncodedData* enc_data = hp_data->encode();
+		if(size_available>=enc_data->length){
+			//add data to block
+			for(int k = 0; k< enc_data->length; k++){
+				block_buffer[index_block] = enc_data->encoded_data[k];
+				index_block++;
+			}
+
+		}
+		else{
+			Serial.println(F("headerblock too small..."));
+			return NULL;
+		
+		}
+		delete[](enc_data->encoded_data);
+		delete(enc_data);
+	}
+	//if everything went ok, then index the data into dyn table
+	for(int i =0; i< size; i++){
+		//Serial.println(F("indexing data"));
+		HPackData* hp_data = (HPackData*)(hp_datas[i]);
+		indexData(hp_data);
+	};
+
+	byte* new_block_buffer = new byte[index_block];
+
+	for(int i=0;i<index_block;i++){
+		new_block_buffer[i] = block_buffer[i];
+	}
+	delete[](block_buffer);
+
+	EncodedData *ed = (EncodedData*)malloc(sizeof(EncodedData));
+	ed->encoded_data = new_block_buffer;
+	ed->length = index_block;
+	return ed;
+};
+
+
+
+void HeaderBuffer::indexData(HPackData* data){
+	Serial.println(F("----indexData"));
+	uint8_t preamble = data->get_preamble();
+	//adding header...	
+	if(preamble==(uint8_t)64){ //literal header field with indexing
+		HeaderPair * new_header_pair;
+		char *name_cpy;
+		if(data->get_index()!=0){ 
+			HeaderPair *name_hp = findEntry(data->get_index());
+			name_cpy = new char[strlen(name_hp->name)+1];
+			strncpy(name_cpy, name_hp->name, strlen(name_hp->name)+1);
+			delete(name_hp);
+		}else{
+			name_cpy=new char[strlen(data->get_name_string())+1];
+			strncpy(name_cpy, data->get_name_string(), strlen(data->get_name_string())+1);
+		}
+		char *value_cpy = new char[strlen(data->get_value_string())+1];
+		strncpy(value_cpy, data->get_value_string(), strlen(data->get_value_string())+1);
+		new_header_pair = new HeaderPair(name_cpy, value_cpy);
+		//}else{//preamble==(uint8_t)128, indexed header field
+		
+		//HeaderPair *indexed_hp = findEntry(data->get_index());
+		//delete(indexed_hp);
+		
+		//add data to dyn table in given index
+		//Serial.print(F("adding to dyn table: "));
+		new_header_pair->toString();
+		dyn_table->addEntry(new_header_pair);//TODO check if added...
+		//delete(new_header_pair);
+	}
+	if(preamble==(uint8_t)32){//preamble==(uint8_t)32){ dynamic table size update
+		//modify dynamic table size
+		//TODO check size
+		//Serial.print(F("adding dynamic table size update"));
+		dyn_table->resize(data->get_max_size());
+	}
+
+}
+
+
+
+/*
 uint32_t HeaderBuffer::addData(HPackData * data){
-	Serial.println(F("----addHPackData"));
+	Serial.println(F("---addHPackData"));
 	EncodedData* encoded_data = data->encode();
 
 	int encoded_data_length = encoded_data->length; //TODO fix this-> cuando preamble and index ==0-> strlen==0
@@ -660,10 +758,10 @@ uint32_t HeaderBuffer::addData(HPackData * data){
 
 	for(uint32_t i = 0; i<encoded_data_length; i++){
 		this->buf[next] = encoded_data->encoded_data[i];
-		char * bits = byteToBits(encoded_data->encoded_data[i]);
-		Serial.println(bits);
-		Serial.println(buf[next]);
-		delete[](bits); 
+		//char * bits = byteToBits(encoded_data->encoded_data[i]);
+		//Serial.println(bits);
+		//Serial.println(buf[next]);
+		//delete[](bits); 
 		next = (next+1)%buf_size;
 	}
 
@@ -671,6 +769,22 @@ uint32_t HeaderBuffer::addData(HPackData * data){
 	delete(encoded_data);
 	return encoded_data_length;
 
+};*/
+
+
+uint32_t HeaderBuffer::receiveHeaderBlock(byte* header_block, uint32_t size){
+	Serial.println(F("----receiveHeaderBlock"));
+	if(availableBufSize()>=size){
+		for(int i =0; i< size; i++){
+			buf[next] = header_block[i];
+			//Serial.println((char)buf[next]);
+			next = (next+1)%buf_size;
+		}
+	}else{
+		Serial.println("Error: ---------------------------------------------no buffer available");
+		return -1;
+	}
+	
 };
 
 bool HeaderBuffer::isHuffmanEncoded(uint32_t pointer){
@@ -843,6 +957,16 @@ HPackData* HeaderBuffer::indexedHeaderField(uint32_t index){
 	return new HPackData((uint8_t)128, index);
 };
 
+uint32_t HeaderBuffer::getBufSize(){
+	return this>buf_size;
+};
+
+uint32_t HeaderBuffer::getFirst(){
+	return this->first;
+	
+};
+
+
 HPackData* HeaderBuffer::literalHeaderField(uint8_t preamble, uint32_t index, bool huffman, char* value){
 	return new HPackData(preamble, index, huffman, value);
 }
@@ -890,7 +1014,7 @@ uint32_t HeaderBuffer::increasePointer(uint32_t pointer, uint32_t add){
 HPackData* HeaderBuffer::getNext(){
 	Serial.println(F("----getNext"));
 	
-	if(buf_size==availableBufSize()){
+	if(buf_size<availableBufSize()){
 		Serial.println(F("no more octets..."));
 		return NULL;
 	}
@@ -914,11 +1038,12 @@ HPackData* HeaderBuffer::getNext(){
 	}else{
 		uint8_t preamble;
 		uint8_t prefix;
-		
+		bool indexing = false;
 		if(first_octet&(byte)64){//literalHeaderFieldWithIncrementalIndex
 			Serial.println(F("Decoding literalHeaderFieldWithIncrementalIndex"));
 			preamble=(byte)64;
-			prefix=6;			
+			prefix=6;	
+			indexing=true;		
 		}else if(first_octet&(byte)32){//dynamicTableSizeUpdate
 			Serial.println(F("Decoding dynamicTableSizeUpdate:"));
 			uint32_t maxSize = decodeInteger(first,5);
@@ -930,6 +1055,9 @@ HPackData* HeaderBuffer::getNext(){
 			}
 			uint32_t octets_length = getOctetsLength(maxSize,5);
 			first = (first+octets_length)%buf_size;
+
+			this->dyn_table->resize(maxSize);
+
 			//increaseFirst(octets_length); //Check if actualize this here or not...
 			return dynamicTableSizeUpdate(maxSize);
 		}else if(first_octet&(byte)16){//literalHeaderFieldWithoutIndexing
@@ -949,20 +1077,26 @@ HPackData* HeaderBuffer::getNext(){
 		}
 		uint32_t index_octets_length = getOctetsLength(index,prefix);
 		uint32_t pointer = index_octets_length;
-		Serial.print(F("index_octets_length: "));
-		Serial.println(index_octets_length);
+		//Serial.print(F("index_octets_length: "));
+		//Serial.println(index_octets_length);
 
 		
 		uint32_t some_string_size = decodeInteger((first+pointer)%buf_size,7);
-		Serial.print(F("some string_size: "));
-		Serial.println(some_string_size);
+		//Serial.print(F("some string_size: "));
+		//Serial.println(some_string_size);
 		
 		uint32_t some_string_size_octets_length = getOctetsLength(some_string_size,7);
 		bool some_huffman = isHuffmanEncoded((first+pointer)%buf_size);
 		//pointer += some_string_size_octets_length;
-		char *some_string = decodeString((first+pointer)%buf_size, some_huffman, buf_size);
-		Serial.print(F("some string: "));
-		Serial.println(some_string);
+		char *some_string = decodeString((first+pointer)%buf_size, some_huffman, some_string_size+some_string_size_octets_length);
+
+		//for(int k = 0; k< some_string_size; k++){
+		//	Serial.println(buf[(first+pointer+k)%buf_size], BIN);
+		//}
+		HPackData * lhf;
+		//Serial.print(F("some string: "));
+		//Serial.println(some_string);
+		//Serial.println(strlen(some_string));
 		pointer += some_string_size+ some_string_size_octets_length;
 		
 		if(index==0){//->some_string==name
@@ -971,21 +1105,85 @@ HPackData* HeaderBuffer::getNext(){
 			bool value_huffman = isHuffmanEncoded((first+pointer)%buf_size);
 			//pointer += value_size_octets_length;
 			
-			char *value_string = decodeString((first+pointer)%buf_size, value_huffman, value_size);
-			Serial.print(F("value string: "));
-			Serial.println(value_string);
+			char *value_string = decodeString((first+pointer)%buf_size, value_huffman, value_size+ value_size_octets_length);
+			//Serial.print(F("value string: "));
+			//Serial.println(value_string);
 			pointer += value_size+ value_size_octets_length;
 			first = (first+pointer)%buf_size;//increaseFirst(pointer);
-			HPackData * lhf = literalHeaderField(preamble, some_huffman, some_string, value_huffman, value_string);
-			delete[](some_string);
+			lhf = literalHeaderField(preamble, some_huffman, some_string, value_huffman, value_string);
 			delete[](value_string);
-			return lhf;
+		
 		}else{ //->some string==value
 			first = (first+pointer)%buf_size;//increaseFirst(pointer);
-			HPackData * lhf = literalHeaderField(preamble, index, some_huffman, some_string);
-			delete[](some_string);
-			return lhf;
+			lhf = literalHeaderField(preamble, index, some_huffman, some_string);
+			
+			
 		}
+		HeaderPair* entry;
+		if(indexing){
+			Serial.println(F("indexing..."));
+			const char* add_value;
+			const char* add_name;
+			if(index!=0){
+				Serial.println(F("index!=0"));
+				entry = findEntry(index);
+				add_name = entry->name;
+				if(entry->value==""){
+					add_value = some_string;
+				}
+				else{
+					add_value = entry->value;
+				}
+				//Serial.println(F("Add name and value"));
+				//Serial.println(add_name);
+				//Serial.println(add_value);	
+			}
+			else{
+				Serial.println(F("index==0"));
+				add_name = lhf->get_name_string();//TODO strcpy
+				add_value = lhf->get_value_string();//TODO strcpy ??
+				//Serial.println(F("Add name and value"));
+				//Serial.println(add_name);
+				//Serial.println(add_value);				
+			}
+
+
+			char *hp_name = new char[strlen(add_name)+1];			
+			//strcpy(hp_name, add_name);
+
+			strncpy(hp_name, add_name, strlen(add_name)+1);
+			char *hp_value = new char[strlen(add_value)+1];
+			//strcpy(hp_value, add_value);
+			strncpy(hp_value, add_value, strlen(add_value)+1);
+
+			//Serial.println(F("hp name and value"));
+			//Serial.println(hp_name);
+			//Serial.println(hp_value);	
+			
+			HeaderPair* indexing_hp = new HeaderPair(hp_name, hp_value);
+
+			
+
+			indexing_hp->toString();
+			Serial.println(F("Adding entry received..."));
+			bool added_entry = dyn_table->addEntry(indexing_hp);
+			//delete(indexing_hp);
+		}
+		//Serial.print(F("dyn_table->size() after adition"));
+		//Serial.println(dyn_table->size());
+		if(index==0){
+			//Serial.println(F("TODO index==0 ..."));
+		}else{
+			if(indexing){
+				//Serial.println(F("deleting entry index!=0"));
+				delete(entry);
+			}
+			else{
+				//Serial.println(F("TODO index!=0 ..."));
+			}
+		}
+		delete[](some_string);
+		return lhf;
 	}	 
 };
 
@@ -1015,6 +1213,7 @@ HeaderPair* HeaderBuffer::findEntry(uint32_t index){
 
 HeaderPair* HeaderBuffer::getHeaderPair(HPackData* hpd){
 	if(hpd->get_preamble()&(uint8_t)32){
+		Serial.println(F("preamble 32"));
 		return NULL;
 	}else{
 		if(!(hpd->get_preamble()&(uint8_t)128)){
@@ -1033,9 +1232,11 @@ HeaderPair* HeaderBuffer::getHeaderPair(HPackData* hpd){
 				strncpy(name_cpy, hpd->get_name_string(), strlen(hpd->get_name_string())+1);
 				char *value_cpy=new char[strlen(hpd->get_value_string())+1];
 				strncpy(value_cpy, hpd->get_value_string(), strlen(hpd->get_value_string())+1);
+				
 				return new HeaderPair(name_cpy,value_cpy);
 			}
 		}else{
+			Serial.println(F("getting hp...find entry..."));
 			return findEntry(hpd->get_index());
 		}
 	}
