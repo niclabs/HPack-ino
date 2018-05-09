@@ -1,60 +1,38 @@
 language: c
-sudo: required #agilizar build.
+sudo: false
 env:
 #placas a utilizar.
   #- board=arduino:avr:mega:cpu=atmega1280 
   - board=arduino:avr:mega:cpu=atmega2560 
-  #- board=arduino:avr:megaADK
 before_install:
-#configuracion previa Arduin
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16"
   - sleep 3
   - export DISPLAY=:1.0
-  - wget http://downloads.arduino.cc/arduino-1.6.5-linux64.tar.xz
-  - tar xf arduino-1.6.5-linux64.tar.xz
-  - sudo mv arduino-1.6.5 /usr/local/share/arduino
-  - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
-  - tar -xf arduino-1.6.5-linux64.tar.xz 
-  - cd arduino-1.6.5/
-  - pwd
-  #- sudo updatedb
-#----------------------------Para usar libreria
- #- sketchbook.path= ~/build/niclabs/HPack-ino
-  - cd ..
-  - git clone https://github.com/niclabs/HPack-ino
-  - mkdir sketchbook
-  - cd arduino-1.6.5/
-  - cd lib
-  - rm -r preferences.txt
-  - cd .. 
-  - cd ..
-  - mv preferences.txt ~/build/niclabs/HPack-ino/arduino-1.6.5/lib
-  - mv test ~/build/niclabs/HPack-ino/sketchbook
-  - cd HPack
-#opcion 1: todo suelto en test directory, solo asi puede usarse la libreria
-  - mv HPack.h ~/build/niclabs/HPack-ino/sketchbook/test
-  - mv HPack.cpp ~/build/niclabs/HPack-ino/sketchbook/test
-  - mv HuffmanTree.h ~/build/niclabs/HPack-ino/sketchbook/test
-  - mv HuffmanTree.cpp ~/build/niclabs/HPack-ino/sketchbook/test
-  - mv HuffmanCodec.h ~/build/niclabs/HPack-ino/sketchbook/test
-  - mv HuffmanCodec.cpp ~/build/niclabs/HPack-ino/sketchbook/test
-  - mv huffmanCode.csv ~/build/niclabs/HPack-ino/sketchbook/test
-##---Contenido de HPack---
-#HPack.cpp  HuffmanCodec.cpp  huffmanCode.csv  HuffmanTree.h
-#HPack.h    HuffmanCodec.h    HuffmanTree.cpp
-##------------------------
-
+  - wget http://downloads.arduino.cc/arduino-1.6.9-linux64.tar.xz
+  - tar xf arduino-1.6.9-linux64.tar.xz
+  - mv arduino-1.6.9 $HOME/arduino_ide
 install:
-   - arduino --install-library "ArduinoUnit"
-script:
-#verificaciones para placas.
- - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
-# - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
-# - arduino --verify --board arduino:avr:mega:cpu=atmega1280 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
-# /home/travis/build/niclabs/HPack-ino/sketchbook/test/test2.ino path donde esta por ahora.
- - arduino -fpermissive --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
+  - ln -s $PWD $HOME/arduino_ide/libraries/HPack
+  - export PATH="$HOME/arduino_ide:$PATH"
 
+  - arduino --install-library "ArduinoUnit"
+#  - arduino --pref "boardsmanager.additional.urls=https://adafruit.github.io/arduino-board-index/package_adafruit_index.json,http://arduino.esp8266.com/stable/package_esp8266com_index.json" --save-prefs 2>&1
+#  - arduino --install-boards arduino:sam 2>&1 /dev/null
+#  - arduino --install-boards arduino:samd 2>&1 /dev/null
+#  - arduino --install-boards esp8266:esp8266 2>&1 /dev/null
+#  - arduino --install-boards adafruit:avr 2>&1 /dev/null
+#  - arduino --install-library TinyWireM 2>&1
+#  - arduino --pref "compiler.warning_level=all" --save-prefs
+script:
+  - arduino -fpermissive --verify --board arduino:avr:mega:cpu=atmega2560 $PWD/tests/test/test.ino
+  #- arduino --verify --board arduino:avr:uno $PWD/examples/FreeMemory/FreeMemory.ino
+  #- arduino --verify --board arduino:sam:arduino_due_x $PWD/examples/FreeMemory/FreeMemory.ino
+  #- arduino --verify --board arduino:samd:zero $PWD/examples/FreeMemory/FreeMemory.ino
+  #- arduino --verify --board esp8266:esp8266:huzzah $PWD/examples/FreeMemory/FreeMemory.ino
+  #- arduino --verify --board arduino:avr:leonardo $PWD/examples/FreeMemory/FreeMemory.ino
+  #- arduino --verify --board adafruit:avr:trinket5 $PWD/examples/FreeMemory/FreeMemory.ino
+  #- arduino --verify --board arduino:avr:gemma $PWD/examples/FreeMemory/FreeMemory.ino
 notifications:
   email:
     on_success: never
-    on_failure: never #always/change/never
+    on_failure: never
