@@ -14,7 +14,7 @@ before_install:
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
   - tar -xf arduino-1.8.5-linux64.tar.xz 
   #- cd arduino-1.8.5/
-#---Para usar libreria
+#---Para usar libreria-
   - git clone https://github.com/niclabs/HPack-ino 
   - mkdir sketchbook
   - mv test ~/build/niclabs/HPack-ino/sketchbook
