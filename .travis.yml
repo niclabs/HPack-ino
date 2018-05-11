@@ -17,9 +17,8 @@ before_install:
 #---Para usar libreria-
   - git clone https://github.com/niclabs/HPack-ino 
   - mkdir sketchbook
-  - mv HPack ~/build/niclabs/HPack-ino/sketchbook
-  - cd test
-  - mv test.ino ~/build/niclabs/HPack-ino/sketchbook/HPack
+  - mv test ~/build/niclabs/HPack-ino/sketchbook
+  - mv  -v ~/build/niclabs/HPack/* ~/build/niclabs/HPack-ino/sketchbook/test
 install:
   - arduino --install-library "ArduinoUnit"
 script:
