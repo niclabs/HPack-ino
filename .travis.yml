@@ -18,7 +18,7 @@ before_install:
   - git clone https://github.com/niclabs/HPack-ino 
   - mkdir sketchbook
   - mv test ~/build/niclabs/HPack-ino/sketchbook
-  - mv  -v ~/build/niclabs/HPack/* ~/build/niclabs/HPack-ino/sketchbook/test
+  - mv  -v ~/build/niclabs/HPack-ino/HPack/* ~/build/niclabs/HPack-ino/sketchbook/test
 install:
   - arduino --install-library "ArduinoUnit"
 script:
