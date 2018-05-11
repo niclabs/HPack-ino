@@ -22,7 +22,7 @@ before_install:
   #- mkdir libraries
   #- cd ../../
   #- mv HPack ~/build/niclabs/HPack-ino/sketchbook/test/libraries
-
+  - cd HPack
   - mv HPack.h ~/build/niclabs/HPack-ino/sketchbook/test
   - mv HPack.cpp ~/build/niclabs/HPack-ino/sketchbook/test
   - mv HuffmanTree.h ~/build/niclabs/HPack-ino/sketchbook/test
