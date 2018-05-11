@@ -1,7 +1,7 @@
 #line 2 "test.ino"
 #include <ArduinoUnit.h>
-#include "libraries/HPack/HPack.h"
-
+//#include "libraries/HPack/HPack.h"
+#include "HPack.h"
 
 test(EncodeDecodeInteger){
   int initial_memory = freeMemory();
