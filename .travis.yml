@@ -23,12 +23,12 @@ before_install:
   - cd ../../
   - mv HPack ~/build/niclabs/HPack-ino/sketchbook/test/libraries
 install:
-   - arduino --install-library "ArduinoUnit"
+  - arduino --install-library "ArduinoUnit"
 script:
- - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
- - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
 
 notifications:
   email:
     on_success: never
-on_failure: never #always/change/never
+    on_failure: never #always/change/never
