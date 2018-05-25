@@ -15,10 +15,12 @@ before_install:
   - tar -xf arduino-1.8.5-linux64.tar.xz 
   #- cd arduino-1.8.5/
 #---Para usar libreria-
-  - git clone https://github.com/niclabs/HPack-ino
-  - mv HPack ~/build/niclabs/HPack-ino/arduino-1.8.5/libraries
-  - ln -s $PWD $HOME/arduino_ide/libraries/HPack
-  - export PATH="$HOME/arduino_ide:$PATH"
+  - git clone https://github.com/niclabs/HPack-ino 
+  - cd ~/usr/local/share/arduino 
+  - ls
+  #- mv HPack ~/build/niclabs/HPack-ino/arduino-1.8.5/libraries
+ # - ln -s $PWD $HOME/arduino_ide/libraries/HPack
+ # - export PATH="$HOME/arduino_ide:$PATH"
 install:
   - arduino --install-library "ArduinoUnit"
 script:
