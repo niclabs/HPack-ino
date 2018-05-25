@@ -13,19 +13,20 @@ before_install:
   - sudo mv arduino-1.8.5 /usr/local/share/arduino
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
   - tar -xf arduino-1.8.5-linux64.tar.xz 
-  #- cd arduino-1.8.5/
 #---Para usar libreria-
   - git clone https://github.com/niclabs/HPack-ino 
-  #- cd /usr/local/share/arduino 
-  #- ls
   - mv HPack /usr/local/share/arduino/libraries
- # - ln -s $PWD $HOME/arduino_ide/libraries/HPack
- # - export PATH="$HOME/arduino_ide:$PATH"
 install:
   - arduino --install-library "ArduinoUnit"
 script:
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test/test.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_dyn_update/test_dyn_update.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_indexed_header/test_indexed_header.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_init_str_repr/test_init_str_repr.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_indexing/test_lit_indexing.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_never/test_lit_never.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_without/test_lit_without.ino
 notifications:
   email:
     on_success: never
