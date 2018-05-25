@@ -174,5 +174,5 @@ HuffmanSymbolCode* Leaf::addChar(uint16_t index, uint32_t code, uint8_t code_len
 				}
 			}
 		}
-		//return nullptr;
+		//return NULL;
 	};

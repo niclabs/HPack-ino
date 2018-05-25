@@ -958,7 +958,7 @@ HPackData* HeaderBuffer::indexedHeaderField(uint32_t index){
 };
 
 uint32_t HeaderBuffer::getBufSize(){
-	return this>buf_size;
+	return this->buf_size;
 };
 
 uint32_t HeaderBuffer::getFirst(){
