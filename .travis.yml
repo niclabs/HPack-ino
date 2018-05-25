@@ -23,7 +23,7 @@ script:
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test/test.ino
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_dyn_update/test_dyn_update.ino
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_indexed_header/test_indexed_header.ino
-  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_init_str_repr/test_init_str_repr.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_int_str_repr/test_int_str_repr.ino
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_indexing/test_lit_indexing.ino
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_never/test_lit_never.ino
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_without/test_lit_without.ino
