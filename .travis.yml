@@ -16,10 +16,7 @@ before_install:
   #- cd arduino-1.8.5/
 #---Para usar libreria-
   - git clone https://github.com/niclabs/HPack-ino
-  - cd arduino-1.8.5
-  #- cd HPack-ino
-  - ls
-  #- mv HPack ~/build/niclabs/arduino-1.8.5/libraries
+  - mv HPack ~/build/niclabs/HPack-ino/arduino-1.8.5/libraries
   #- ln -s $PWD $HOME/arduino_ide/libraries/HPack
   #- export PATH="$HOME/arduino_ide:$PATH"
   
