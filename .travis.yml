@@ -16,14 +16,16 @@ before_install:
   #- cd arduino-1.8.5/
 #---Para usar libreria-
   - git clone https://github.com/niclabs/HPack-ino 
-  - mkdir sketchbook
-  - mv test ~/build/niclabs/HPack-ino/sketchbook
-  - mv  -v ~/build/niclabs/HPack-ino/HPack/* ~/build/niclabs/HPack-ino/sketchbook/test
+  - ln -s $PWD $HOME/arduino_ide/libraries/HPack
+  - export PATH="$HOME/arduino_ide:$PATH"
+  #- mkdir sketchbook
+  #- mv test ~/build/niclabs/HPack-ino/sketchbook
+  #- mv  -v ~/build/niclabs/HPack-ino/HPack/* ~/build/niclabs/HPack-ino/sketchbook/test
 install:
   - arduino --install-library "ArduinoUnit"
 script:
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 /usr/local/share/arduino/examples/01.Basics/Blink/Blink.ino
-  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
+  #- arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/sketchbook/test/test.ino
 
 notifications:
   email:
