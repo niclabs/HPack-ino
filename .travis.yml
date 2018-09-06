@@ -27,6 +27,7 @@ script:
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_indexing/test_lit_indexing.ino
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_never/test_lit_never.ino
   - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/test_lit_without/test_lit_without.ino
+  - arduino --verify --board arduino:avr:mega:cpu=atmega2560 ~/build/niclabs/HPack-ino/tests/HPackAPITest/HPackAPITest.ino
 notifications:
   email:
     on_success: never
